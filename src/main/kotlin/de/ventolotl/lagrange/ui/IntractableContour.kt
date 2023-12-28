@@ -1,8 +1,8 @@
-package ui
+package de.ventolotl.lagrange.ui
 
-import maths.Function3d
-import maths.Vector2d
-import maths.distSq
+import de.ventolotl.lagrange.maths.Function3d
+import de.ventolotl.lagrange.maths.Vector2d
+import de.ventolotl.lagrange.maths.distSq
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.event.MouseAdapter

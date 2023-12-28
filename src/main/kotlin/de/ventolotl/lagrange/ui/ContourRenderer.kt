@@ -1,4 +1,4 @@
-package ui
+package de.ventolotl.lagrange.ui
 
 import java.awt.Color
 import java.awt.Font

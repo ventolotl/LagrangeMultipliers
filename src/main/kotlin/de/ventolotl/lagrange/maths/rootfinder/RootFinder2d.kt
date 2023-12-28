@@ -1,7 +1,7 @@
-package maths.rootfinder
+package de.ventolotl.lagrange.maths.rootfinder
 
-import maths.Function2d
-import utility.DoubleRange
+import de.ventolotl.lagrange.maths.Function2d
+import de.ventolotl.lagrange.utility.DoubleRange
 import kotlin.math.abs
 
 private const val MAX_ITERATIONS = 10

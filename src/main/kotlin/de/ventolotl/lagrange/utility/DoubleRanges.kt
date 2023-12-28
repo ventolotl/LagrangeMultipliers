@@ -1,6 +1,6 @@
-package utility
+package de.ventolotl.lagrange.utility
 
-import maths.Vector2d
+import de.ventolotl.lagrange.maths.Vector2d
 import kotlin.math.max
 import kotlin.math.min
 

@@ -1,4 +1,4 @@
-package maths
+package de.ventolotl.lagrange.maths
 
 const val EPSILON = 1e-5
 

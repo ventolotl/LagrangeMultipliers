@@ -1,9 +1,9 @@
-package maths.rootfinder
+package de.ventolotl.lagrange.maths.rootfinder
 
-import maths.Function3d
-import maths.Vector2d
-import maths.distSq
-import utility.DoubleVector2Range
+import de.ventolotl.lagrange.maths.Function3d
+import de.ventolotl.lagrange.maths.Vector2d
+import de.ventolotl.lagrange.maths.distSq
+import de.ventolotl.lagrange.utility.DoubleVector2Range
 
 private const val MAX_ITERATIONS = 10
 

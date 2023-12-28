@@ -1,10 +1,12 @@
-import maths.Constraint
-import maths.Function3d
-import maths.Vector2d
-import maths.createContour
-import ui.ContourConstraint
-import ui.mapToColors
-import utility.range
+package de.ventolotl.lagrange
+
+import de.ventolotl.lagrange.maths.Constraint
+import de.ventolotl.lagrange.maths.Function3d
+import de.ventolotl.lagrange.maths.Vector2d
+import de.ventolotl.lagrange.maths.createContour
+import de.ventolotl.lagrange.ui.ContourConstraint
+import de.ventolotl.lagrange.ui.mapToColors
+import de.ventolotl.lagrange.utility.range
 import java.awt.Color
 import javax.swing.JFrame
 import javax.swing.WindowConstants
@@ -16,17 +18,14 @@ private val colors = (255 downTo 0 step 25).map {
     Color(it / 5, 255 - it, it).brighter()
 }.toTypedArray()
 
-/**
- *
- */
 fun main() {
-    val zRange = -5.0 range 1.0
+    val zRange = -8.0 range 1.0
     val zAccuracy = 1.0
     val pointsRange = Vector2d(-3.0, -3.0) range Vector2d(3.0, 3.0)
-    val accuracy = 0.007
+    val accuracy = 0.008
 
     val functionToOptimize = Function3d { x, y ->
-        1 - x - y * y
+        1 - x * x - y * y
     }
     val constraint = Constraint(
         equation = { x, y -> x * y },

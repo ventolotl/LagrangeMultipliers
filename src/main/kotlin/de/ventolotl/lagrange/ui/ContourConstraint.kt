@@ -1,6 +1,6 @@
-package ui
+package de.ventolotl.lagrange.ui
 
-import maths.*
+import de.ventolotl.lagrange.maths.*
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.event.MouseAdapter

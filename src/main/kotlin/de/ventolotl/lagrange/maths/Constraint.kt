@@ -1,7 +1,7 @@
-package maths
+package de.ventolotl.lagrange.maths
 
-import maths.rootfinder.findRootsNewton
-import utility.DoubleVector2Range
+import de.ventolotl.lagrange.maths.rootfinder.findRootsNewton
+import de.ventolotl.lagrange.utility.DoubleVector2Range
 
 data class Constraint(
     val equation: Function3d,

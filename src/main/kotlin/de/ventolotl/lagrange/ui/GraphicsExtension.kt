@@ -1,6 +1,6 @@
-package ui
+package de.ventolotl.lagrange.ui
 
-import maths.Vector2d
+import de.ventolotl.lagrange.maths.Vector2d
 import java.awt.Color
 import java.awt.Graphics
 import kotlin.math.sqrt

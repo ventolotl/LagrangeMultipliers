@@ -1,6 +1,6 @@
-package maths
+package de.ventolotl.lagrange.maths
 
-import maths.rootfinder.findRootsNewton
+import de.ventolotl.lagrange.maths.rootfinder.findRootsNewton
 import kotlin.math.abs
 
 fun Function3d.optimize(constraint: Constraint): List<Vector2d<Double>> {
