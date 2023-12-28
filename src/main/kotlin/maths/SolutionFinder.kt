@@ -1,5 +1,6 @@
 package maths
 
+import maths.rootfinder.findRootsNewton
 import kotlin.math.abs
 
 fun Function3d.optimize(constraint: Constraint): List<Vector2d<Double>> {
@@ -16,9 +17,6 @@ private class SolutionFinder(
     private val accuracy = constraint.accuracy
 
     fun findSolutions(): List<Vector2d<Double>> {
-        // TODO: Does not work very well
-        return emptyList()
-
         println("Finding solutions...")
 
         val points = constraint.points
@@ -31,7 +29,7 @@ private class SolutionFinder(
         roots.forEach { root ->
             val nearestPoint = points.minBy { it.distSq(root) }
 
-            if (nearestPoint.dist(root) < 2 * accuracy /* tolerance */) {
+            if (nearestPoint.dist(root) < accuracy) {
                 solutions.add(nearestPoint)
                 return@forEach
             }

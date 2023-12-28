@@ -1,6 +1,8 @@
 package maths
 
+import maths.rootfinder.findRootsNewton
 import utility.DoubleRange
+import utility.DoubleVector2Range
 import kotlin.math.absoluteValue
 import kotlin.system.measureNanoTime
 
@@ -9,7 +11,7 @@ open class ContourLine(val z: Double, val points: List<Vector2d<Double>>)
 fun Function3d.createContour(
     zRange: DoubleRange,
     zAccuracy: Double,
-    pointsRange: DoubleRange,
+    pointsRange: DoubleVector2Range,
     pointsAccuracy: Double
 ): List<ContourLine> {
     val contour = mutableListOf<ContourLine>()
