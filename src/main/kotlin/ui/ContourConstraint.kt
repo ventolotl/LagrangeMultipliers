@@ -84,21 +84,13 @@ class ContourConstraint(
     }
 
     private fun renderSolutions(graphics: Graphics) {
-        var y = 40
         graphics.color = Color.WHITE
-
-        if (solutions.isNotEmpty()) {
-            graphics.drawString("Solutions:", 20, y)
-        }
 
         solutions.forEach { point ->
             val windowPoint = algebraicToWindowCoordinates(point)
 
             val radius = 15
             graphics.fillOval(windowPoint.x - radius / 2, windowPoint.y - radius / 2, radius, radius)
-
-            y += 20
-            graphics.drawString(point.toString(), 20, y)
         }
     }
 
