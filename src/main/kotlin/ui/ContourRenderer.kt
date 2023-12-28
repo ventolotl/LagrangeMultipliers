@@ -19,7 +19,7 @@ open class ContourRenderer(
         graphics.font = contourFont
 
         contourLines.forEach { line -> renderContourLinePoints(graphics, line) }
-      //  contourLines.forEach { line -> renderContourLineText(graphics, line) }
+        contourLines.forEach { line -> renderContourLineText(graphics, line) }
     }
 
     private fun renderContourLinePoints(graphics: Graphics, line: ContourLineColored) {
