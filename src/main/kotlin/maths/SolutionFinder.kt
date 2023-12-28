@@ -17,12 +17,8 @@ private class SolutionFinder(
     private val accuracy = constraint.accuracy
 
     fun findSolutions(): List<Vector2d<Double>> {
-        println("Finding solutions...")
-
         val points = constraint.points
         val roots = errorFunction().findRootsNewton(constraint.range, accuracy)
-
-        println("Found ${roots.size} roots")
 
         val solutions = mutableListOf<Vector2d<Double>>()
 
