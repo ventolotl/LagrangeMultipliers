@@ -2,18 +2,20 @@ package de.ventolotl.lagrange.maths.rootfinder
 
 import de.ventolotl.lagrange.maths.Function3d
 import de.ventolotl.lagrange.maths.Vector2d
-import de.ventolotl.lagrange.maths.distSq
 import de.ventolotl.lagrange.utility.DoubleVector2Range
 
-private const val MAX_ITERATIONS = 10
+private const val MAX_ITERATIONS = 100000
+private const val PRECISION = 1e-9
 
-fun Function3d.findRootNewton(start: Vector2d<Double>, step: Double): Vector2d<Double>? {
-    return findRootNewton(start.x, start.y, step)
+fun Function3d.findRootNewton(start: Vector2d<Double>, precision: Double = PRECISION): Vector2d<Double>? {
+    return findRootNewton(start.x, start.y, precision)
 }
 
-private fun Function3d.findRootNewton(startX: Double, startY: Double, step: Double): Vector2d<Double>? {
-    val stepSq = step * step
-
+private fun Function3d.findRootNewton(
+    startX: Double,
+    startY: Double,
+    precision: Double = PRECISION
+): Vector2d<Double>? {
     var rootX = startX
     var rootY = startY
 
@@ -32,7 +34,7 @@ private fun Function3d.findRootNewton(startX: Double, startY: Double, step: Doub
         val deltaX = rootX - nextRootX
         val deltaY = rootY - nextRootY
         val distSq = deltaX * deltaX + deltaY * deltaY
-        if (distSq < stepSq) {
+        if (distSq < precision) {
             return Vector2d(rootX, rootY)
         }
 
@@ -43,21 +45,18 @@ private fun Function3d.findRootNewton(startX: Double, startY: Double, step: Doub
     return null
 }
 
-fun Function3d.findRootsNewton(range: DoubleVector2Range, step: Double): List<Vector2d<Double>> {
-    val stepSq = step * step
-    val distinctRoots = mutableListOf<Vector2d<Double>>()
+fun Function3d.findRootsNewton(
+    range: DoubleVector2Range,
+    step: Double,
+    precision: Double = PRECISION
+): List<Vector2d<Double>> {
+    val roots = mutableListOf<Vector2d<Double>>()
 
     range.iterate(step) { x, y ->
-        findRootNewton(x, y, step)?.let { root ->
-            val unknownRoot = distinctRoots.none { otherRoot ->
-                otherRoot.distSq(root) < stepSq
-            }
-
-            if (unknownRoot) {
-                distinctRoots.add(root)
-            }
+        findRootNewton(x, y, precision)?.let { root ->
+            roots.add(root)
         }
     }
 
-    return distinctRoots
+    return roots
 }
