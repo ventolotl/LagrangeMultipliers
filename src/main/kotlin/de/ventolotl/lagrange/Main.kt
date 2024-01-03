@@ -19,31 +19,27 @@ private val colors = (255 downTo 0 step 25).map {
 }.toTypedArray()
 
 fun main() {
-    val zRange = -8.0 range 1.0
+    val zRange = -15.0 range 1.0
     val zAccuracy = 1.0
     val pointsRange = Vector2d(-3.0, -3.0) range Vector2d(3.0, 3.0)
-    val accuracy = 0.008
+    val step = 0.06
 
     val functionToOptimize = Function3d { x, y ->
-        1 - x * x - y * y
+        1 - x - y * y
     }
     val constraint = Constraint(
         equation = { x, y -> x * y },
         constant = 2.0,
         range = pointsRange,
-        accuracy = accuracy
+        step= step
     )
 
     val contour = functionToOptimize.createContour(
         zRange = zRange,
         zAccuracy = zAccuracy,
         pointsRange = pointsRange,
-        pointsAccuracy = accuracy
+        pointsStep = step
     ).mapToColors(colors)
-
-    contour.forEach { contourLine ->
-        println("z=${contourLine.z}, points=${contourLine.points.size}")
-    }
 
     val window = JFrame("Lagrange Multipliers")
     val contourConstraint = ContourConstraint(
@@ -55,6 +51,9 @@ fun main() {
             max(pointsRange.endX.absoluteValue, pointsRange.endY.absoluteValue)
         ).nextUp().toInt()
     )
+
+    println("total points: ${contour.sumOf { it.points.size }}")
+
     window.add(contourConstraint)
     window.apply {
         pack()
