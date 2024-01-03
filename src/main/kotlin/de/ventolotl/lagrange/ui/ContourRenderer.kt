@@ -1,5 +1,6 @@
 package de.ventolotl.lagrange.ui
 
+import de.ventolotl.lagrange.utility.connectPoints
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics
@@ -19,14 +20,15 @@ open class ContourRenderer(
         graphics.font = contourFont
 
         contourLines.forEach { line -> renderContourLinePoints(graphics, line) }
-        contourLines.forEach { line -> renderContourLineText(graphics, line) }
+        //  contourLines.forEach { line -> renderContourLineText(graphics, line) }
     }
 
     private fun renderContourLinePoints(graphics: Graphics, line: ContourLineColored) {
         val points = line.points
-        points.forEach { point ->
-            val color = line.color
-            graphics.drawLine(algebraicToWindowCoordinates(point), algebraicToWindowCoordinates(point), color)
+        val color = line.color
+
+        points.connectPoints { point1, point2 ->
+            graphics.drawLine(algebraicToWindowCoordinates(point1), algebraicToWindowCoordinates(point2), color, lineWidth = 3.5f)
         }
     }
 

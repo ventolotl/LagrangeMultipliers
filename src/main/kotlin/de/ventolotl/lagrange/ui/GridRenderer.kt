@@ -1,6 +1,7 @@
 package de.ventolotl.lagrange.ui
 
 import de.ventolotl.lagrange.maths.Vector2d
+import de.ventolotl.lagrange.utility.Point2d
 import java.awt.Color
 import java.awt.Graphics
 import javax.swing.JPanel
@@ -31,7 +32,7 @@ open class GridRenderer(private val scalingFactor: Int) : JPanel() {
                     Vector2d(windowX, 0),
                     Vector2d(windowX, height),
                     color = Color.GRAY,
-                    expansion = 3
+                    lineWidth = 3f
                 )
             }
 
@@ -42,7 +43,7 @@ open class GridRenderer(private val scalingFactor: Int) : JPanel() {
                     Vector2d(0, windowY),
                     Vector2d(width, windowY),
                     color = Color.GRAY,
-                    expansion = 3
+                    lineWidth = 3f
                 )
             }
         }
@@ -53,13 +54,13 @@ open class GridRenderer(private val scalingFactor: Int) : JPanel() {
         repeat(2 * scalingFactor + 1) { iterator(it.toDouble() - scalingFactor) }
     }
 
-    fun windowToAlgebraicCoordinates(windowCoordinates: Vector2d<Int>): Vector2d<Double> {
+    fun windowToAlgebraicCoordinates(windowCoordinates: Vector2d<Int>): Point2d {
         val algebraicX = (windowCoordinates.x - halfWidth) * scalingFactor / halfWidth.toDouble()
         val algebraicY = (windowCoordinates.y - halfHeight) * scalingFactor / halfHeight.toDouble()
         return Vector2d(algebraicX, -algebraicY)
     }
 
-    fun algebraicToWindowCoordinates(algebraicCoordinates: Vector2d<Double>): Vector2d<Int> {
+    fun algebraicToWindowCoordinates(algebraicCoordinates: Point2d): Vector2d<Int> {
         val windowX = (algebraicCoordinates.x * halfWidth) / scalingFactor.toDouble() + halfWidth
         val windowY = (-algebraicCoordinates.y * halfHeight) / scalingFactor.toDouble() + halfHeight
         return Vector2d(windowX.roundToInt(), windowY.roundToInt())
