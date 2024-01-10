@@ -62,8 +62,8 @@ open class IntractableContour(
         SwingUtilities.invokeLater { repaint() }
     }
 
-    override fun paint(graphics: Graphics) {
-        super.paint(graphics)
+    override fun render(graphics: Graphics) {
+        super.render(graphics)
 
         val gradientData = this.gradientData ?: return
         val point = gradientData.point

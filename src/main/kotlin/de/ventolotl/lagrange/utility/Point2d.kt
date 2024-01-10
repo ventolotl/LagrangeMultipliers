@@ -1,26 +1,38 @@
 package de.ventolotl.lagrange.utility
 
 import de.ventolotl.lagrange.maths.Vector2d
-import de.ventolotl.lagrange.maths.distSq
 
 typealias Point2d = Vector2d<Double>
 
-fun List<Point2d>.connectPoints(connector: (point1: Point2d, point2: Point2d) -> Unit) {
-    val pointsCopy = this.toMutableList()
-    var point = this.firstOrNull() ?: return
+fun <T> List<Vector2d<T>>.connectPoints(range: Vector2dRange<T>): List<Vector2d<T>>
+        where T : Comparable<T>,
+              T : Number {
+    val result = mutableListOf<Vector2d<T>>()
 
-    val iterator = pointsCopy.iterator()
-    while (iterator.hasNext()) {
-        pointsCopy.remove(point)
+    println("got=${this.size}")
 
-        val nearestPoint = if (pointsCopy.isEmpty()) {
-            this.minBy { point.distSq(it) }
+    val points = this.toMutableList()
+    var point = this.firstOrNull() ?: return emptyList()
+
+    var index = 0
+
+    while (index < points.size) {
+        val currentPoint = points[index]
+        points.removeAt(index)
+
+        val nearestPoint = if (points.isEmpty()) {
+            this.minBy { currentPoint.distSq(it) }
         } else {
-            pointsCopy.minBy { point.distSq(it) }
+            points.minBy { currentPoint.distSq(it) }
         }
 
-        connector(point, nearestPoint)
-
+        result.add(point)
         point = nearestPoint
+
+        index++
     }
+
+
+    println("result=$result")
+    return result
 }

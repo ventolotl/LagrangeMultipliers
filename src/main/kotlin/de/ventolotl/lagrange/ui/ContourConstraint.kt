@@ -1,8 +1,11 @@
 package de.ventolotl.lagrange.ui
 
 import de.ventolotl.lagrange.maths.*
+import de.ventolotl.lagrange.utility.*
+import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics
+import java.awt.Graphics2D
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.SwingUtilities
@@ -18,7 +21,7 @@ class ContourConstraint(
     private val gradient = constraint.equation.gradient()
     private var gradientData: GradientData? = null
 
-    private val solutions = function3d.optimize(constraint)
+    private val solutions = emptyList<Point2d>() //function3d.optimize(constraint)
 
     init {
         val mouseAdapter = object : MouseAdapter() {
@@ -59,8 +62,8 @@ class ContourConstraint(
         SwingUtilities.invokeLater { repaint() }
     }
 
-    override fun paint(graphics: Graphics) {
-        super.paint(graphics)
+    override fun render(graphics: Graphics) {
+        super.render(graphics)
 
         renderConstraintEquation(graphics)
         renderSolutions(graphics)
@@ -78,9 +81,19 @@ class ContourConstraint(
 
     private fun renderConstraintEquation(graphics: Graphics) {
         val points = constraint.points
-        points.forEach { point ->
-            graphics.drawLine(algebraicToWindowCoordinates(point), algebraicToWindowCoordinates(point), color)
-        }
+
+        val windowCoordinates = points.map(::algebraicToWindowCoordinates)
+
+        val sortedPoints = windowCoordinates.connectPoints(
+            Vector2dRange(0..width, 0..height)
+        )
+
+        val pointsX = sortedPoints.map { it.x }.toIntArray()
+        val pointsY = sortedPoints.map { it.y }.toIntArray()
+
+        graphics.color = color
+        (graphics as Graphics2D).stroke = BasicStroke(2.2f)
+        graphics.drawPolygon(pointsX, pointsY, sortedPoints.size)
     }
 
     private fun renderSolutions(graphics: Graphics) {

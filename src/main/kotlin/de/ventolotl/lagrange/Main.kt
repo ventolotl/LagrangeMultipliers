@@ -9,10 +9,13 @@ import de.ventolotl.lagrange.ui.mapToColors
 import de.ventolotl.lagrange.utility.range
 import java.awt.Color
 import javax.swing.JFrame
+import javax.swing.UIManager
+import javax.swing.UnsupportedLookAndFeelException
 import javax.swing.WindowConstants
 import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.nextUp
+
 
 private val colors = (255 downTo 0 step 25).map {
     Color(it / 5, 255 - it, it).brighter()
@@ -22,10 +25,10 @@ fun main() {
     val zRange = -15.0 range 1.0
     val zAccuracy = 1.0
     val pointsRange = Vector2d(-3.0, -3.0) range Vector2d(3.0, 3.0)
-    val step = 0.06
+    val step = 0.09
 
     val functionToOptimize = Function3d { x, y ->
-        1 - x - y * y
+        1 - x * x - y * y
     }
     val constraint = Constraint(
         equation = { x, y -> x * y },
@@ -40,6 +43,8 @@ fun main() {
         pointsRange = pointsRange,
         pointsStep = step
     ).mapToColors(colors)
+
+    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
 
     val window = JFrame("Lagrange Multipliers")
     val contourConstraint = ContourConstraint(

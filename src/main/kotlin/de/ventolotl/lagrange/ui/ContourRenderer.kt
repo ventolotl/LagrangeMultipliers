@@ -1,9 +1,9 @@
 package de.ventolotl.lagrange.ui
 
+import de.ventolotl.lagrange.utility.Point2d
+import de.ventolotl.lagrange.utility.Vector2dRange
 import de.ventolotl.lagrange.utility.connectPoints
-import java.awt.Color
-import java.awt.Font
-import java.awt.Graphics
+import java.awt.*
 import kotlin.math.roundToInt
 
 open class ContourRenderer(
@@ -14,12 +14,14 @@ open class ContourRenderer(
         Font(graphics.font.name, Font.PLAIN, 20)
     }
 
-    override fun paint(graphics: Graphics) {
-        super.paint(graphics)
+    override fun render(graphics: Graphics) {
+        super.render(graphics)
 
         graphics.font = contourFont
 
-        contourLines.forEach { line -> renderContourLinePoints(graphics, line) }
+        contourLines.forEach { line ->
+            renderContourLinePoints(graphics, line)
+        }
         //  contourLines.forEach { line -> renderContourLineText(graphics, line) }
     }
 
@@ -27,9 +29,18 @@ open class ContourRenderer(
         val points = line.points
         val color = line.color
 
-        points.connectPoints { point1, point2 ->
-            graphics.drawLine(algebraicToWindowCoordinates(point1), algebraicToWindowCoordinates(point2), color, lineWidth = 3.5f)
-        }
+        val windowPoints = points.map { algebraicToWindowCoordinates(it) }
+
+        val sortedPoints = windowPoints.connectPoints(
+            Vector2dRange(0..width, 0..height)
+        )
+
+        val pointsX = sortedPoints.map { it.x }.toIntArray()
+        val pointsY = sortedPoints.map { it.y }.toIntArray()
+
+        graphics.color = color
+        (graphics as Graphics2D).stroke = BasicStroke(2.2f)
+        graphics.drawPolygon(pointsX, pointsY, sortedPoints.size)
     }
 
     private fun renderContourLineText(graphics: Graphics, line: ContourLineColored) {

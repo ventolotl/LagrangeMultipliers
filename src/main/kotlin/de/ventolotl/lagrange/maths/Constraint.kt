@@ -1,13 +1,13 @@
 package de.ventolotl.lagrange.maths
 
 import de.ventolotl.lagrange.maths.rootfinder.findRootsNewton
-import de.ventolotl.lagrange.utility.DoubleVector2Range
 import de.ventolotl.lagrange.utility.Point2d
+import de.ventolotl.lagrange.utility.Vector2dRange
 
 data class Constraint(
     val equation: Function3d,
     val constant: Double,
-    val range: DoubleVector2Range,
+    val range: Vector2dRange<Double>,
     val step: Double
 ) {
     val points = calculatePoints()
@@ -16,9 +16,6 @@ data class Constraint(
         val correspondingFunction = Function3d { x, y ->
             equation.eval(x, y) - constant
         }
-        println("Finding points")
-        return correspondingFunction.findRootsNewton(range, step).also {
-            println("Finished")
-        }
+        return correspondingFunction.findRootsNewton(range, step)
     }
 }

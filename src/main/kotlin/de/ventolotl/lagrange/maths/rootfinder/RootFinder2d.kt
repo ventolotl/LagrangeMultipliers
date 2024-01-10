@@ -1,19 +1,20 @@
 package de.ventolotl.lagrange.maths.rootfinder
 
 import de.ventolotl.lagrange.maths.Function2d
-import de.ventolotl.lagrange.utility.DoubleRange
+import de.ventolotl.lagrange.utility.Range
+import de.ventolotl.lagrange.utility.iterate
 import kotlin.math.abs
 
 private const val MAX_ITERATIONS = 10
 private const val PRECISION = 1e-9
 
-fun Function2d.findRootNewton(range: DoubleRange, accuracy: Double): Double? {
+fun Function2d.findRootNewton(range: Range<Double>, accuracy: Double): Double? {
     return findRootNewton(differentiate(), range, accuracy)
 }
 
 private fun Function2d.findRootNewton(
     derivative: Function2d,
-    range: DoubleRange,
+    range: Range<Double>,
     precision: Double = PRECISION
 ): Double? {
     var root = range.start
@@ -22,7 +23,7 @@ private fun Function2d.findRootNewton(
         val nextRoot = root - eval(root) / derivative.eval(root)
 
         val delta = abs(root - nextRoot)
-        if (delta < precision && range.includes(nextRoot)) {
+        if (delta < precision && nextRoot in range) {
             return nextRoot
         }
 
@@ -32,11 +33,11 @@ private fun Function2d.findRootNewton(
     return null
 }
 
-fun Function2d.findRootsNewton(range: DoubleRange, precision: Double = PRECISION): List<Double> {
+fun Function2d.findRootsNewton(range: Range<Double>, precision: Double = PRECISION): List<Double> {
     val roots = mutableListOf<Double>()
 
     range.iterate(precision) { start ->
-        findRootNewton(DoubleRange(start, range.end), precision)?.let { root ->
+        findRootNewton(Range(start, range.end), precision)?.let { root ->
             roots.add(root)
         }
     }

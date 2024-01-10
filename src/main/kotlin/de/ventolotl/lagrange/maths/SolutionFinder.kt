@@ -1,9 +1,9 @@
 package de.ventolotl.lagrange.maths
 
 import de.ventolotl.lagrange.maths.rootfinder.findRootsNewton
-import kotlin.math.abs
+import de.ventolotl.lagrange.utility.Point2d
 
-fun Function3d.optimize(constraint: Constraint): List<Vector2d<Double>> {
+fun Function3d.optimize(constraint: Constraint): List<Point2d> {
     val solutionFinder = SolutionFinder(this, constraint)
     return solutionFinder.findSolutions()
 }
@@ -14,31 +14,18 @@ private class SolutionFinder(
 ) {
     private val gradientFunction = function3d.gradient()
     private val gradientConstraint = constraint.equation.gradient()
-    private val accuracy = constraint.accuracy
 
     fun findSolutions(): List<Vector2d<Double>> {
-        val points = constraint.points
-        val roots = errorFunction().findRootsNewton(constraint.range, accuracy)
-
-        val solutions = mutableListOf<Vector2d<Double>>()
-
-        roots.forEach { root ->
-            val nearestPoint = points.minBy { it.distSq(root) }
-
-            if (nearestPoint.dist(root) < accuracy) {
-                solutions.add(nearestPoint)
-                return@forEach
-            }
-        }
-
-        return solutions
+        return errorFunction().findRootsNewton(constraint.range, 0.1)
     }
 
     private fun errorFunction(): Function3d {
         return Function3d { x, y ->
             val lambda1 = gradientFunction.x.eval(x, y) / gradientConstraint.x.eval(x, y)
             val lambda2 = gradientFunction.y.eval(x, y) / gradientConstraint.y.eval(x, y)
-            abs(lambda1 - lambda2)
+
+            val error = lambda1 - lambda2
+            error
         }
     }
 }

@@ -4,6 +4,8 @@ import de.ventolotl.lagrange.maths.Vector2d
 import de.ventolotl.lagrange.utility.Point2d
 import java.awt.Color
 import java.awt.Graphics
+import java.awt.Graphics2D
+import java.awt.RenderingHints
 import javax.swing.JPanel
 import kotlin.math.roundToInt
 
@@ -11,7 +13,19 @@ open class GridRenderer(private val scalingFactor: Int) : JPanel() {
     private val halfWidth: Int get() = width / 2
     private val halfHeight: Int get() = height / 2
 
-    override fun paint(graphics: Graphics) {
+    override fun paintComponent(graphics: Graphics) {
+        super.paintComponent(graphics)
+
+        val g2d = graphics.create() as Graphics2D
+        val hints = RenderingHints(
+            RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON
+        )
+        g2d.setRenderingHints(hints)
+        render(graphics)
+        g2d.dispose()
+    }
+
+    open fun render(graphics: Graphics) {
         graphics.color = Color(54, 54, 54)
         graphics.fillRect(0, 0, width, height)
         drawAxis(graphics)
