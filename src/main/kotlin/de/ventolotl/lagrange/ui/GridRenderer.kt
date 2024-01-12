@@ -26,7 +26,7 @@ open class GridRenderer(private val scalingFactor: Int) : JPanel() {
     }
 
     open fun render(graphics: Graphics) {
-        graphics.color = Color(54, 54, 54)
+        graphics.color = Color(35, 35, 35)
         graphics.fillRect(0, 0, width, height)
         drawAxis(graphics)
     }
@@ -46,7 +46,7 @@ open class GridRenderer(private val scalingFactor: Int) : JPanel() {
                     Vector2d(windowX, 0),
                     Vector2d(windowX, height),
                     color = Color.GRAY,
-                    lineWidth = 3f
+                    lineWidth = 2f
                 )
             }
 
@@ -57,7 +57,7 @@ open class GridRenderer(private val scalingFactor: Int) : JPanel() {
                     Vector2d(0, windowY),
                     Vector2d(width, windowY),
                     color = Color.GRAY,
-                    lineWidth = 3f
+                    lineWidth = 2f
                 )
             }
         }
