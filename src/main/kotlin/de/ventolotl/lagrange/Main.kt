@@ -11,7 +11,9 @@ import java.awt.Color
 import javax.swing.JFrame
 import javax.swing.UIManager
 import javax.swing.WindowConstants
-import kotlin.math.*
+import kotlin.math.absoluteValue
+import kotlin.math.max
+import kotlin.math.nextUp
 
 private val colors = (255 downTo 0 step 10).map {
     Color(it / 8, 255 - it, it).brighter()

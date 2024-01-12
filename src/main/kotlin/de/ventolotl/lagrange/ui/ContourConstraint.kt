@@ -1,7 +1,8 @@
 package de.ventolotl.lagrange.ui
 
 import de.ventolotl.lagrange.maths.*
-import de.ventolotl.lagrange.utility.*
+import de.ventolotl.lagrange.utility.Vector2dRange
+import de.ventolotl.lagrange.utility.connectPoints
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics
