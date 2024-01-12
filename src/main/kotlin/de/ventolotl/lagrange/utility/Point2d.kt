@@ -36,7 +36,7 @@ private fun <T> List<Vector2d<T>>.connectPointsFrom(range: Vector2dRange<T>, sta
         val dist = nearest.dist(point)
 
         val distMultiplier = dist / (lastDist ?: dist)
-        if (distMultiplier < 10) {
+        if (distMultiplier < 3) {
             points.add(nearest)
             point = nearest
             lastDist = dist
