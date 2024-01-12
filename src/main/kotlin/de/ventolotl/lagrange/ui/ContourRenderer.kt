@@ -12,10 +12,10 @@ class ContourRenderer(
     val contourLines: List<ContourLineColored>,
     val constraint: Constraint,
     scalingFactor: Int,
-    function3d: Function3d
+    private val function3d: Function3d
 ) : GridRenderer(scalingFactor) {
     private val contourFont by lazy {
-        Font(graphics.font.name, Font.PLAIN, 20)
+        Font(graphics.font.name, Font.PLAIN, 50)
     }
 
     private val solutions = function3d.optimize(constraint)
@@ -52,14 +52,20 @@ class ContourRenderer(
         }
         FunctionRenderer.renderGraph(graphics, this, constraint.points, constraint.color)
 
+        renderData?.let { renderData ->
+            renderGradient(graphics, renderData.gradientData1)
+            renderGradient(graphics, renderData.gradientData2)
+        }
+
         solutions.forEach { solution ->
             val windowPoint = algebraicToWindowCoordinates(solution)
             graphics.drawCircle(windowPoint, radius = 15, Color.WHITE)
-        }
 
-        val renderData = renderData ?: return
-        renderGradient(graphics, renderData.gradientData1)
-        renderGradient(graphics, renderData.gradientData2)
+            val text = "(%.3f, %.3f) at z=%.3f".format(
+                solution.x, solution.y, function3d.eval(solution.x, solution.y)
+            )
+            graphics.drawText(text, windowPoint, Color.WHITE, font)
+        }
     }
 
     private fun renderGradient(graphics: Graphics, gradientData: GradientData) {

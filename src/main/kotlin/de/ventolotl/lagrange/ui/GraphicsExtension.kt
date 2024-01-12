@@ -3,9 +3,25 @@ package de.ventolotl.lagrange.ui
 import de.ventolotl.lagrange.maths.Vector2d
 import java.awt.BasicStroke
 import java.awt.Color
+import java.awt.Font
 import java.awt.Graphics
 import java.awt.Graphics2D
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
+
+internal fun Graphics.drawText(text: String, pos: Vector2d<Int>, textColor: Color, font: Font) {
+    this.font = font
+    val rect = font.getStringBounds(text, fontMetrics.fontRenderContext)
+    this.color = Color.BLACK
+    fillRect(
+        pos.x + rect.minX.roundToInt(),
+        pos.y + rect.minY.roundToInt(),
+        (rect.maxX - rect.minX).roundToInt(),
+        (rect.maxY - rect.minY).roundToInt()
+    )
+    this.color = textColor
+    drawString(text, pos.x, pos.y)
+}
 
 internal fun Graphics.drawCircle(pos: Vector2d<Int>, radius: Int, color: Color) {
     this.color = color
