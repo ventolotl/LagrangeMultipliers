@@ -2,12 +2,14 @@ package de.ventolotl.lagrange.maths
 
 import de.ventolotl.lagrange.maths.rootfinder.findRootsNewton
 import de.ventolotl.lagrange.utility.Vector2dRange
+import java.awt.Color
 
 data class Constraint(
     val equation: Function3d,
     val constant: Double,
     val range: Vector2dRange<Double>,
-    val step: Double
+    val step: Double,
+    val color: Color = Color.RED
 ) {
     val points = calculatePoints()
 
