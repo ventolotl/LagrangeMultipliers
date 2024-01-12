@@ -7,7 +7,7 @@ fun Function3d.optimize(constraint: Constraint): List<Vector2d<Double>> {
     return solutionFinder.findSolutions()
 }
 
-private const val PRECISION = 0.005
+private const val PRECISION = 0.05
 
 private class SolutionFinder(
     functionToOptimize: Function3d,
@@ -26,7 +26,7 @@ private class SolutionFinder(
     private fun filterFunction(roots: List<Vector2d<Double>>): List<Vector2d<Double>> {
         return roots.filter { root ->
             val delta = constraintEq.eval(root.x, root.y) - constraint.constant
-            delta * delta < PRECISION
+            delta * delta < PRECISION * PRECISION
         }
     }
 
