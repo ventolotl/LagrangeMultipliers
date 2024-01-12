@@ -1,8 +1,8 @@
 package de.ventolotl.lagrange.maths.rootfinder
 
 import de.ventolotl.lagrange.maths.Function3d
+import de.ventolotl.lagrange.maths.Vector2d
 import de.ventolotl.lagrange.maths.distSq
-import de.ventolotl.lagrange.utility.Point2d
 import de.ventolotl.lagrange.utility.Vector2dRange
 import de.ventolotl.lagrange.utility.iterate
 
@@ -10,7 +10,7 @@ private const val MAX_ITERATIONS = 100000
 private const val PRECISION = 1e-9
 private const val ROOT_DIFF_MIN = 0.005
 
-fun Function3d.findRootNewton(start: Point2d, precision: Double = PRECISION): Point2d? {
+fun Function3d.findRootNewton(start: Vector2d<Double>, precision: Double = PRECISION): Vector2d<Double>? {
     return findRootNewton(start.x, start.y, precision)
 }
 
@@ -18,7 +18,7 @@ private fun Function3d.findRootNewton(
     startX: Double,
     startY: Double,
     precision: Double = PRECISION
-): Point2d? {
+): Vector2d<Double>? {
     var rootX = startX
     var rootY = startY
 
@@ -38,7 +38,7 @@ private fun Function3d.findRootNewton(
         val deltaY = rootY - nextRootY
         val distSq = deltaX * deltaX + deltaY * deltaY
         if (distSq < precision) {
-            return Point2d(rootX, rootY)
+            return Vector2d(rootX, rootY)
         }
 
         rootX = nextRootX
@@ -52,8 +52,8 @@ fun Function3d.findRootsNewton(
     range: Vector2dRange<Double>,
     step: Double,
     precision: Double = PRECISION
-): List<Point2d> {
-    val roots = mutableListOf<Point2d>()
+): List<Vector2d<Double>> {
+    val roots = mutableListOf<Vector2d<Double>>()
 
     range.iterate(step) { x, y ->
         findRootNewton(x, y, precision)?.let { root ->
@@ -64,7 +64,7 @@ fun Function3d.findRootsNewton(
     return roots.reduceDuplicates()
 }
 
-private fun List<Point2d>.reduceDuplicates(): List<Point2d> {
+private fun List<Vector2d<Double>>.reduceDuplicates(): List<Vector2d<Double>> {
     val reducedPoints = this.toMutableList()
 
     var index = 0

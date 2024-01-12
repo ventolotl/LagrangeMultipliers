@@ -1,12 +1,11 @@
 package de.ventolotl.lagrange.maths
 
 import de.ventolotl.lagrange.maths.rootfinder.findRootsNewton
-import de.ventolotl.lagrange.utility.Point2d
 import de.ventolotl.lagrange.utility.Range
 import de.ventolotl.lagrange.utility.Vector2dRange
 import de.ventolotl.lagrange.utility.iterate
 
-open class ContourLine(val z: Double, val points: List<Point2d>)
+open class ContourLine(val z: Double, val points: List<Vector2d<Double>>)
 
 fun Function3d.createContour(
     zRange: Range<Double>,

@@ -1,7 +1,7 @@
 package de.ventolotl.lagrange.ui
 
 import de.ventolotl.lagrange.maths.ContourLine
-import de.ventolotl.lagrange.utility.Point2d
+import de.ventolotl.lagrange.maths.Vector2d
 import java.awt.Color
 
 fun List<ContourLine>.mapToColors(color: Array<Color>): List<ContourLineColored> {
@@ -11,4 +11,4 @@ fun List<ContourLine>.mapToColors(color: Array<Color>): List<ContourLineColored>
     }
 }
 
-class ContourLineColored(z: Double, points: List<Point2d>, val color: Color) : ContourLine(z, points)
+class ContourLineColored(z: Double, points: List<Vector2d<Double>>, val color: Color) : ContourLine(z, points)

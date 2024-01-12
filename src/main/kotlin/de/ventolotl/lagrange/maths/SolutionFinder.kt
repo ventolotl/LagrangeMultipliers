@@ -1,9 +1,8 @@
 package de.ventolotl.lagrange.maths
 
 import de.ventolotl.lagrange.maths.rootfinder.findRootsNewton
-import de.ventolotl.lagrange.utility.Point2d
 
-fun Function3d.optimize(constraint: Constraint): List<Point2d> {
+fun Function3d.optimize(constraint: Constraint): List<Vector2d<Double>> {
     val solutionFinder = SolutionFinder(this, constraint)
     return solutionFinder.findSolutions()
 }

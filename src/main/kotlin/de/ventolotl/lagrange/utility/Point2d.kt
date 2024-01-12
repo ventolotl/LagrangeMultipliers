@@ -2,8 +2,6 @@ package de.ventolotl.lagrange.utility
 
 import de.ventolotl.lagrange.maths.Vector2d
 
-typealias Point2d = Vector2d<Double>
-
 fun <T> List<Vector2d<T>>.connectPoints(range: Vector2dRange<T>): List<List<Vector2d<T>>>
         where T : Comparable<T>,
               T : Number {
