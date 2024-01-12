@@ -10,33 +10,34 @@ import de.ventolotl.lagrange.utility.range
 import java.awt.Color
 import javax.swing.JFrame
 import javax.swing.UIManager
-import javax.swing.UnsupportedLookAndFeelException
 import javax.swing.WindowConstants
-import kotlin.math.absoluteValue
-import kotlin.math.max
-import kotlin.math.nextUp
+import kotlin.math.*
 
-
-private val colors = (255 downTo 0 step 25).map {
-    Color(it / 5, 255 - it, it).brighter()
+private val colors = (255 downTo 0 step 10).map {
+    Color(it / 8, 255 - it, it).brighter()
 }.toTypedArray()
 
 fun main() {
     val zRange = -15.0 range 1.0
-    val zAccuracy = 1.0
+    val zAccuracy = 0.5
     val pointsRange = Vector2d(-3.0, -3.0) range Vector2d(3.0, 3.0)
-    val step = 0.09
+    val step = 0.05
 
     val functionToOptimize = Function3d { x, y ->
         1 - x * x - y * y
     }
-    val constraint = Constraint(
-        equation = { x, y -> x * y },
-        constant = 2.0,
-        range = pointsRange,
-        step= step
-    )
 
+    val constraintEq = Function3d { x, y ->
+        x * y
+    }
+    val constraintValue = 2.0
+
+    val constraint = Constraint(
+        equation = constraintEq,
+        constant = constraintValue,
+        range = pointsRange,
+        step = step
+    )
     val contour = functionToOptimize.createContour(
         zRange = zRange,
         zAccuracy = zAccuracy,
