@@ -8,7 +8,7 @@ import de.ventolotl.lagrange.utility.iterate
 
 private const val MAX_ITERATIONS = 100000
 private const val PRECISION = 1e-9
-private const val ROOT_DIFF_MIN = 1e-4
+private const val ROOT_DIFF_MIN = 0.005
 
 fun Function3d.findRootNewton(start: Point2d, precision: Double = PRECISION): Point2d? {
     return findRootNewton(start.x, start.y, precision)
@@ -71,7 +71,7 @@ private fun List<Point2d>.reduceDuplicates(): List<Point2d> {
     while (index < reducedPoints.size) {
         val point = reducedPoints[index++]
         reducedPoints.removeIf { other ->
-            other != point && other.distSq(point) < 0.005
+            other != point && other.distSq(point) < ROOT_DIFF_MIN
         }
     }
 
