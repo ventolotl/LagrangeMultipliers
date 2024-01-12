@@ -21,7 +21,7 @@ class ContourConstraint(
     private val gradient = constraint.equation.gradient()
     private var gradientData: GradientData? = null
 
-    private val solutions = emptyList<Point2d>() //function3d.optimize(constraint)
+    private val solutions = function3d.optimize(constraint)
 
     init {
         val mouseAdapter = object : MouseAdapter() {
@@ -88,12 +88,17 @@ class ContourConstraint(
             Vector2dRange(0..width, 0..height)
         )
 
-        val pointsX = sortedPoints.map { it.x }.toIntArray()
-        val pointsY = sortedPoints.map { it.y }.toIntArray()
+        sortedPoints.forEach { points ->
+            var index = 0
+            while (index++ < points.size) {
+                val point1 = points.getOrNull(index) ?: return@forEach
+                val point2 = points.getOrNull(index + 1) ?: return@forEach
 
-        graphics.color = color
-        (graphics as Graphics2D).stroke = BasicStroke(2.2f)
-        graphics.drawPolygon(pointsX, pointsY, sortedPoints.size)
+                graphics.color = color
+                (graphics as Graphics2D).stroke = BasicStroke(2.2f)
+                graphics.drawLine(point1.x, point1.y, point2.x, point2.y)
+            }
+        }
     }
 
     private fun renderSolutions(graphics: Graphics) {

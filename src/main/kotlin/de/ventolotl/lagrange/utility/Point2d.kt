@@ -4,35 +4,54 @@ import de.ventolotl.lagrange.maths.Vector2d
 
 typealias Point2d = Vector2d<Double>
 
-fun <T> List<Vector2d<T>>.connectPoints(range: Vector2dRange<T>): List<Vector2d<T>>
+fun <T> List<Vector2d<T>>.connectPoints(range: Vector2dRange<T>): List<List<Vector2d<T>>>
         where T : Comparable<T>,
               T : Number {
-    val result = mutableListOf<Vector2d<T>>()
+    val result = mutableListOf<List<Vector2d<T>>>()
 
-    println("got=${this.size}")
+    val list = this.toMutableList()
+    while (true) {
+        val start = list.find { point -> point !in range }
+            ?: list.firstOrNull()
+            ?: return result
 
-    val points = this.toMutableList()
-    var point = this.firstOrNull() ?: return emptyList()
+        val points = list.connectPointsFrom(range, start)
+        result.add(points)
+        list.removeAll(points)
+    }
+}
 
-    var index = 0
+private fun <T> List<Vector2d<T>>.connectPointsFrom(
+    range: Vector2dRange<T>,
+    start: Vector2d<T>
+): List<Vector2d<T>>
+        where T : Comparable<T>,
+              T : Number {
+    val input = this.toMutableList()
+    val points = mutableListOf<Vector2d<T>>()
 
-    while (index < points.size) {
-        val currentPoint = points[index]
-        points.removeAt(index)
+    var point = start
+    points.add(point)
+    input.remove(point)
 
-        val nearestPoint = if (points.isEmpty()) {
-            this.minBy { currentPoint.distSq(it) }
-        } else {
-            points.minBy { currentPoint.distSq(it) }
+    var lastDist: Double? = null
+
+    while (input.isNotEmpty()) {
+        val nearest = input.minBy { it.distSq(point) }
+        val dist = nearest.dist(point)
+
+        val distMultiplier = dist / (lastDist ?: dist)
+        if (distMultiplier < 10) {
+            points.add(nearest)
+            point = nearest
+            lastDist = dist
         }
-
-        result.add(point)
-        point = nearestPoint
-
-        index++
+        input.remove(nearest)
     }
 
+    if (start in range) {
+        points.add(start)
+    }
 
-    println("result=$result")
-    return result
+    return points
 }

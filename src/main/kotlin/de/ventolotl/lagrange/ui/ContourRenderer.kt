@@ -1,6 +1,5 @@
 package de.ventolotl.lagrange.ui
 
-import de.ventolotl.lagrange.utility.Point2d
 import de.ventolotl.lagrange.utility.Vector2dRange
 import de.ventolotl.lagrange.utility.connectPoints
 import java.awt.*
@@ -35,12 +34,17 @@ open class ContourRenderer(
             Vector2dRange(0..width, 0..height)
         )
 
-        val pointsX = sortedPoints.map { it.x }.toIntArray()
-        val pointsY = sortedPoints.map { it.y }.toIntArray()
+        sortedPoints.forEach { points ->
+            var index = 0
+            while (index++ < points.size) {
+                val point1 = points.getOrNull(index) ?: return@forEach
+                val point2 = points.getOrNull(index + 1) ?: return@forEach
 
-        graphics.color = color
-        (graphics as Graphics2D).stroke = BasicStroke(2.2f)
-        graphics.drawPolygon(pointsX, pointsY, sortedPoints.size)
+                graphics.color = color
+                (graphics as Graphics2D).stroke = BasicStroke(2.2f)
+                graphics.drawLine(point1.x, point1.y, point2.x, point2.y)
+            }
+        }
     }
 
     private fun renderContourLineText(graphics: Graphics, line: ContourLineColored) {
