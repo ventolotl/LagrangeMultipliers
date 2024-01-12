@@ -21,10 +21,7 @@ fun <T> List<Vector2d<T>>.connectPoints(range: Vector2dRange<T>): List<List<Vect
     }
 }
 
-private fun <T> List<Vector2d<T>>.connectPointsFrom(
-    range: Vector2dRange<T>,
-    start: Vector2d<T>
-): List<Vector2d<T>>
+private fun <T> List<Vector2d<T>>.connectPointsFrom(range: Vector2dRange<T>, start: Vector2d<T>): List<Vector2d<T>>
         where T : Comparable<T>,
               T : Number {
     val input = this.toMutableList()
