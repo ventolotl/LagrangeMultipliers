@@ -34,7 +34,6 @@ private class SolutionFinder(
         return Function3d { x, y ->
             val lambda1 = gradientOptimizeFunc.x.eval(x, y) / gradientConstraint.x.eval(x, y)
             val lambda2 = gradientOptimizeFunc.y.eval(x, y) / gradientConstraint.y.eval(x, y)
-
             val error = lambda1 - lambda2
             error * error
         }
