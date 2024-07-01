@@ -2,11 +2,10 @@ package de.ventolotl.lagrange.ui
 
 import de.ventolotl.lagrange.maths.Vector2d
 import de.ventolotl.lagrange.utility.Vector2dRange
-import de.ventolotl.lagrange.utility.connectPoints
-import java.awt.BasicStroke
+import de.ventolotl.lagrange.utility.distSq
+import de.ventolotl.lagrange.utility.pow
 import java.awt.Color
 import java.awt.Graphics
-import java.awt.Graphics2D
 
 internal object FunctionRenderer {
     fun renderGraph(
@@ -16,20 +15,36 @@ internal object FunctionRenderer {
         color: Color,
         width: Float = 2.2F
     ) {
-        graphics.color = color
-        (graphics as Graphics2D).stroke = BasicStroke(width)
-
-        val windowCoordinates = points.map(gridRenderer::algebraicToWindowCoordinates)
-        val connectedPoints = windowCoordinates.connectPoints(
-            Vector2dRange(0..gridRenderer.width, 0..gridRenderer.height)
+        val windowRange = Vector2dRange(
+            0..gridRenderer.width,
+            0..gridRenderer.height
         )
-        connectedPoints.forEach { pointsBundle ->
-            var index = 0
-            while (index++ < pointsBundle.size) {
-                val point1 = pointsBundle.getOrNull(index) ?: return@forEach
-                val point2 = pointsBundle.getOrNull(index + 1) ?: return@forEach
-                graphics.drawLine(point1.x, point1.y, point2.x, point2.y)
+        val windowCoordinates = points
+            .map(gridRenderer::algebraicToWindowCoordinates)
+            .filter { point -> point in windowRange }
+            .toMutableList()
+        val first = windowCoordinates.firstOrNull() ?: return
+        var lastPoint = first
+
+        val connectDistSq = (gridRenderer.width / 10.0).pow(2)
+
+        while (windowCoordinates.isNotEmpty()) {
+            val safeLastPoint = lastPoint
+            val nearest = windowCoordinates.minBy { point ->
+                point.distSq(safeLastPoint)
             }
+
+            val connect = nearest.distSq(lastPoint) < connectDistSq
+            if (connect) {
+                graphics.drawLine(nearest, lastPoint, color, width)
+            }
+            lastPoint = nearest
+            windowCoordinates.remove(nearest)
+        }
+
+        val connect = first.distSq(lastPoint) < connectDistSq
+        if (connect) {
+            graphics.drawLine(first, lastPoint, color, width)
         }
     }
 }
