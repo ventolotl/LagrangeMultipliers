@@ -1,11 +1,7 @@
 package de.ventolotl.lagrange.ui
 
 import de.ventolotl.lagrange.maths.Vector2d
-import java.awt.BasicStroke
-import java.awt.Color
-import java.awt.Font
-import java.awt.Graphics
-import java.awt.Graphics2D
+import java.awt.*
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
@@ -38,10 +34,10 @@ internal fun Graphics.drawLine(vec1: Vector2d<Int>, vec2: Vector2d<Int>, color: 
         }
     }
 
-    drawLine(vec1.x, vec1.y,  vec2.x, vec2.y)
+    drawLine(vec1.x, vec1.y, vec2.x, vec2.y)
 }
 
-// Stolen from https://stackoverflow.com/questions/2027613/how-to-draw-a-directed-arrow-line-in-java
+// from https://stackoverflow.com/questions/2027613/how-to-draw-a-directed-arrow-line-in-java
 fun Graphics.drawArrowLine(start: Vector2d<Int>, vec: Vector2d<Int>, d: Int, h: Int) {
     val x1 = start.x
     val y1 = start.y
