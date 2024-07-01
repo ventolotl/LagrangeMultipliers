@@ -29,9 +29,8 @@ internal object FunctionRenderer {
         val connectDistSq = (gridRenderer.width / 10.0).pow(2)
 
         while (windowCoordinates.isNotEmpty()) {
-            val safeLastPoint = lastPoint
             val nearest = windowCoordinates.minBy { point ->
-                point.distSq(safeLastPoint)
+                point.distSq(lastPoint)
             }
 
             val connect = nearest.distSq(lastPoint) < connectDistSq
