@@ -13,7 +13,7 @@ fun interface Function3d {
         return Function2d { x -> eval(x, y) }
     }
 
-    fun differentiateX(): Function3d {
+    fun partialX(): Function3d {
         return Function3d { x, y ->
             val df = eval(x + EPSILON, y) - eval(x, y)
             val dx = EPSILON
@@ -21,7 +21,7 @@ fun interface Function3d {
         }
     }
 
-    fun differentiateY(): Function3d {
+    fun partialY(): Function3d {
         return Function3d { x, y ->
             val df = eval(x, y + EPSILON) - eval(x, y)
             val dy = EPSILON
@@ -30,7 +30,7 @@ fun interface Function3d {
     }
 
     fun gradient(): Vector2d<Function3d> {
-        return Vector2d(differentiateX(), differentiateY())
+        return Vector2d(partialX(), partialY())
     }
 }
 
