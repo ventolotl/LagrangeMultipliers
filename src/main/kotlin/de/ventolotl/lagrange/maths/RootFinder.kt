@@ -18,8 +18,7 @@ fun Function3d.findRootsNewton(range: Vector2dRange<Double>, accuracy: Int = 100
     range.rangeX.iterate(stepSizeX) { fixedX ->
         val projectedY = this.evalX(fixedX)
         projectedY.findRootsNewton(range.rangeY, accuracy).forEach { rootY ->
-            val root = Vector2d(fixedX, rootY)
-            roots.add(root)
+            roots.add(Vector2d(fixedX, rootY))
         }
     }
 
@@ -30,8 +29,7 @@ fun Function3d.findRootsNewton(range: Vector2dRange<Double>, accuracy: Int = 100
     range.rangeY.iterate(stepSizeY) { fixedY ->
         val projectedX = this.evalY(fixedY)
         projectedX.findRootsNewton(range.rangeX, accuracy).forEach { rootX ->
-            val root = Vector2d(rootX, fixedY)
-            roots.add(root)
+            roots.add(Vector2d(rootX, fixedY))
         }
     }
 
@@ -53,7 +51,6 @@ fun Function2d.findRootsNewton(range: Range<Double>, accuracy: Int): List<Double
 
 fun Function2d.rootFinder2dExact(guess: Double): Double? {
     var currentX = guess
-
     val derivative = this.differentiate()
 
     repeat(NEWTON_ITERATIONS) {
@@ -82,8 +79,8 @@ private fun Function2d.approximatedRoots(range: Range<Double>, accuracy: Int = 1
         val currentSign = this.eval(x) > 0
 
         if (currentSign != lastSign) {
-            val average = x - stepSize * 0.5
-            approximatedRoots.add(average)
+            val midX = x - stepSize * 0.5
+            approximatedRoots.add(midX)
         }
 
         lastSign = currentSign
