@@ -15,15 +15,16 @@ import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.nextUp
 
-private val colors = (255 downTo 0 step 10).map {
+private val colors = (0..<255 step 10).map {
     Color(it / 8, 255 - it, it).brighter()
 }.toTypedArray()
 
 fun main() {
-    val zRange = 0.0 range 18.0
-    val zAccuracy = 1.0
-    val pointsRange = Vector2d(-3.0, -3.0) range Vector2d(3.0, 3.0)
-    val accuracy = 100
+    val zRange = -50.0 range 200.0
+    val zAccuracy = 0.25
+    val area = 15.0
+    val pointsRange = Vector2d(-area, -area) range Vector2d(area, area)
+    val accuracy = 50
 
     val functionToOptimize = Function3d { x, y ->
         x * x + y * y
