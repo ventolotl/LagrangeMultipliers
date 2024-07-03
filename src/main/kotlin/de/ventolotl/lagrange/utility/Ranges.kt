@@ -2,14 +2,6 @@ package de.ventolotl.lagrange.utility
 
 import de.ventolotl.lagrange.maths.Vector2d
 
-infix fun <T : Comparable<T>> T.range(other: T): Range<T> {
-    return Range(start0 = this, end0 = other)
-}
-
-infix fun <T : Comparable<T>> Vector2d<T>.range(other: Vector2d<T>): Vector2dRange<T> {
-    return Vector2dRange(start0 = this, end0 = other)
-}
-
 data class Range<T : Comparable<T>>(private val start0: T, private val end0: T) {
     val start = if (start0 < end0) start0 else end0
     val end = if (start0 > end0) start0 else end0
@@ -18,6 +10,21 @@ data class Range<T : Comparable<T>>(private val start0: T, private val end0: T) 
 
     operator fun contains(value: T): Boolean {
         return value in start..end
+    }
+}
+
+infix fun <T : Comparable<T>> T.range(other: T): Range<T> {
+    return Range(start0 = this, end0 = other)
+}
+
+inline fun <reified T> Range<T>.iterate(step: T, iteration: (value: T) -> Unit)
+        where T : Comparable<T>,
+              T : Number {
+    var value = start
+
+    while (value <= end) {
+        iteration(value)
+        value = value.plus(step)
     }
 }
 
@@ -37,5 +44,19 @@ data class Vector2dRange<T : Comparable<T>>(private val start0: Vector2d<T>, pri
 
     operator fun contains(point: Vector2d<T>): Boolean {
         return point.x in startX..endX && point.y in startY..endY
+    }
+}
+
+infix fun <T : Comparable<T>> Vector2d<T>.range(other: Vector2d<T>): Vector2dRange<T> {
+    return Vector2dRange(start0 = this, end0 = other)
+}
+
+inline fun <reified T> Vector2dRange<T>.iterate(step: T, iteration: (x: T, y: T) -> Unit)
+        where T : Comparable<T>,
+              T : Number {
+    rangeX.iterate(step) { x ->
+        rangeY.iterate(step) { y ->
+            iteration(x, y)
+        }
     }
 }
