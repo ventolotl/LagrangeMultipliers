@@ -9,23 +9,24 @@ import javax.swing.JPanel
 import kotlin.math.roundToInt
 
 open class GridRenderer(private val scalingFactor: Int) : JPanel() {
+    private val darkGray = Color(20, 20, 20)
+
     private val halfWidth: Int get() = width / 2
     private val halfHeight: Int get() = height / 2
 
     override fun paintComponent(graphics: Graphics) {
         super.paintComponent(graphics)
 
-        val g2d = graphics.create() as Graphics2D
         val hints = RenderingHints(
             RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON
         )
-        g2d.setRenderingHints(hints)
+        (graphics as Graphics2D).setRenderingHints(hints)
         render(graphics)
-        g2d.dispose()
+        graphics.dispose()
     }
 
     open fun render(graphics: Graphics) {
-        graphics.color = Color(35, 35, 35)
+        graphics.color = Color.BLACK
         graphics.fillRect(0, 0, width, height)
         drawAxis(graphics)
     }
@@ -44,8 +45,8 @@ open class GridRenderer(private val scalingFactor: Int) : JPanel() {
                 graphics.drawLine(
                     Vector2d(windowX, 0),
                     Vector2d(windowX, height),
-                    color = Color.GRAY,
-                    lineWidth = 2f
+                    color = darkGray,
+                    lineWidth = 1f
                 )
             }
 
@@ -55,8 +56,8 @@ open class GridRenderer(private val scalingFactor: Int) : JPanel() {
                 graphics.drawLine(
                     Vector2d(0, windowY),
                     Vector2d(width, windowY),
-                    color = Color.GRAY,
-                    lineWidth = 2f
+                    color = darkGray,
+                    lineWidth = 1f
                 )
             }
         }

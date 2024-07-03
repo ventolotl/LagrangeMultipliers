@@ -13,7 +13,7 @@ internal object FunctionRenderer {
         gridRenderer: GridRenderer,
         points: List<Vector2d<Double>>,
         color: Color,
-        width: Float = 2.2F
+        width: Float = 20F
     ) {
         val windowRange = Vector2dRange(
             0..gridRenderer.width,

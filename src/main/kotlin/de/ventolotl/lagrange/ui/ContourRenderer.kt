@@ -24,6 +24,10 @@ class ContourRenderer(
     private val gradientConstraintFunc = constraint.equation.gradient()
 
     private var dragged = false
+    private var movingGradientContours = (0..10).map { i ->
+        val index = ((contourLines.size - 1) * i / 10.0).toInt()
+        contourLines[index]
+    }
     private var renderData: RenderData? = null
 
     init {
@@ -47,15 +51,15 @@ class ContourRenderer(
 
         graphics.font = contourFont
 
+        repaintContours(graphics)
+        repaintGradient(graphics)
+    }
+
+    private fun repaintContours(graphics: Graphics) {
         contourLines.forEach { line ->
             FunctionRenderer.renderGraph(graphics, this, line.points, line.color)
         }
-        FunctionRenderer.renderGraph(graphics, this, constraint.points, constraint.color)
-
-        renderData?.let { renderData ->
-            renderGradient(graphics, renderData.gradientData1)
-            renderGradient(graphics, renderData.gradientData2)
-        }
+        FunctionRenderer.renderGraph(graphics, this, constraint.points, constraint.color, width = 5f)
 
         solutions.forEach { solution ->
             val windowPoint = algebraicToWindowCoordinates(solution)
@@ -65,6 +69,13 @@ class ContourRenderer(
                 solution.x, solution.y, function3d.eval(solution.x, solution.y)
             )
             graphics.drawText(text, windowPoint, Color.WHITE, font)
+        }
+    }
+
+    private fun repaintGradient(graphics: Graphics) {
+        renderData?.let { renderData ->
+            renderGradient(graphics, renderData.gradientData1)
+            renderGradient(graphics, renderData.gradientData2)
         }
     }
 
@@ -89,7 +100,7 @@ class ContourRenderer(
     }
 
     private fun createGradientOptimizeFunction(algebraicMousePoint: Vector2d<Double>): GradientData {
-        val contourClosestPoints = contourLines
+        val contourClosestPoints = movingGradientContours
             .filter { line -> line.points.isNotEmpty() }
             .associateWith { line ->
                 line.points.minBy { it.distSq(algebraicMousePoint) }
