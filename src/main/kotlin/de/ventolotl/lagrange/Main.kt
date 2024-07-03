@@ -20,13 +20,13 @@ private val colors = (255 downTo 0 step 10).map {
 }.toTypedArray()
 
 fun main() {
-    val zRange = -15.0 range 1.0
-    val zAccuracy = 0.5
+    val zRange = 0.0 range 18.0
+    val zAccuracy = 1.0
     val pointsRange = Vector2d(-3.0, -3.0) range Vector2d(3.0, 3.0)
-    val step = 0.05
+    val accuracy = 100
 
     val functionToOptimize = Function3d { x, y ->
-        1 - x * x - y * y
+        x * x + y * y
     }
 
     val constraintEq = Function3d { x, y ->
@@ -38,14 +38,16 @@ fun main() {
         equation = constraintEq,
         constant = constraintValue,
         range = pointsRange,
-        step = step
+        accuracy = accuracy
     )
     val contour = functionToOptimize.createContour(
         zRange = zRange,
         zAccuracy = zAccuracy,
         pointsRange = pointsRange,
-        pointsStep = step
+        accuracy = accuracy
     ).mapToColors(colors)
+
+    println("contour created")
 
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
 

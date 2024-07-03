@@ -14,11 +14,8 @@ inline fun <reified T> Range<T>.iterate(step: T, iteration: (value: T) -> Unit)
 inline fun <reified T> Vector2dRange<T>.iterate(step: T, iteration: (x: T, y: T) -> Unit)
         where T : Comparable<T>,
               T : Number {
-    val xRange = startX range endX
-    val yRange = startY range endY
-
-    xRange.iterate(step) { x ->
-        yRange.iterate(step) { y ->
+    rangeX.iterate(step) { x ->
+        rangeY.iterate(step) { y ->
             iteration(x, y)
         }
     }
