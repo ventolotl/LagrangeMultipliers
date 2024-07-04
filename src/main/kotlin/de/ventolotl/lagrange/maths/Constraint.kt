@@ -10,12 +10,12 @@ data class Constraint(
     val accuracy: Int,
     val color: Color = Color.RED
 ) {
+    val rootFunction = Function3d { x, y ->
+        equation.eval(x, y) - constant
+    }
     val points = calculatePoints()
 
     private fun calculatePoints(): List<Vector2d<Double>> {
-        val correspondingFunction = Function3d { x, y ->
-            equation.eval(x, y) - constant
-        }
-        return correspondingFunction.findRootsNewton(range, accuracy)
+        return rootFunction.findRootsNewton(range, accuracy)
     }
 }

@@ -1,37 +1,34 @@
 package de.ventolotl.lagrange.maths
 
+import kotlin.math.absoluteValue
+
 fun Function3d.optimize(constraint: Constraint): List<Vector2d<Double>> {
     val solutionFinder = SolutionFinder(this, constraint)
     return solutionFinder.findSolutions()
 }
 
 private class SolutionFinder(
-    functionToOptimize: Function3d,
+    private val functionToOptimize: Function3d,
     private val constraint: Constraint
 ) {
     private val constraintEq = constraint.equation
 
-    private val gradientOptimizeFunc = functionToOptimize.gradient()
-    private val gradientConstraint = constraint.equation.gradient()
-
     fun findSolutions(): List<Vector2d<Double>> {
-        val roots = gradientErrorFunction().findRootsNewton(constraint.range, 1000)
-        return satisfyConstraintCurve(roots)
-    }
+        val functionToOptimizePartialX = functionToOptimize.partialX()
+        val functionToOptimizePartialY = functionToOptimize.partialY()
 
-    private fun satisfyConstraintCurve(roots: List<Vector2d<Double>>): List<Vector2d<Double>> {
-        return roots.filter { root ->
-            val delta = constraintEq.eval(root.x, root.y) - constraint.constant
-            delta * delta < 1e-3
-        }
-    }
+        val constraintPartialX = constraintEq.partialX()
+        val constraintPartialY = constraintEq.partialY()
 
-    private fun gradientErrorFunction(): Function3d {
-        return Function3d { x, y ->
-            val lambda1 = gradientOptimizeFunc.x.eval(x, y) / gradientConstraint.x.eval(x, y)
-            val lambda2 = gradientOptimizeFunc.y.eval(x, y) / gradientConstraint.y.eval(x, y)
-            val error = lambda1 - lambda2
-            error * error
-        }
+        val roots = constraint.rootFunction
+            .findRootsNewton(constraint.range, 3000)
+            .filter { (x, y) ->
+                val lambda1 = functionToOptimizePartialX.eval(x, y) / constraintPartialX.eval(x, y)
+                val lambda2 = functionToOptimizePartialY.eval(x, y) / constraintPartialY.eval(x, y)
+                val error = lambda1.absoluteValue - lambda2.absoluteValue
+                error * error < 1e-3
+            }
+
+        return roots
     }
 }
