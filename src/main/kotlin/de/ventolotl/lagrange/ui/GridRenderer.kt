@@ -5,6 +5,8 @@ import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.RenderingHints
+import java.awt.event.ComponentEvent
+import java.awt.event.ComponentListener
 import javax.swing.JPanel
 import kotlin.math.roundToInt
 
@@ -13,6 +15,19 @@ open class GridRenderer(private val scalingFactor: Int) : JPanel() {
 
     private val halfWidth: Int get() = width / 2
     private val halfHeight: Int get() = height / 2
+
+    init {
+        val componentListener = object : ComponentListener {
+            override fun componentResized(e: ComponentEvent?) {
+                resize()
+            }
+
+            override fun componentMoved(e: ComponentEvent?) = Unit
+            override fun componentShown(e: ComponentEvent?) = Unit
+            override fun componentHidden(e: ComponentEvent?) = Unit
+        }
+        addComponentListener(componentListener)
+    }
 
     override fun paintComponent(graphics: Graphics) {
         super.paintComponent(graphics)
@@ -24,6 +39,8 @@ open class GridRenderer(private val scalingFactor: Int) : JPanel() {
         render(graphics)
         graphics.dispose()
     }
+
+    open fun resize() {}
 
     open fun render(graphics: Graphics) {
         graphics.color = Color.BLACK

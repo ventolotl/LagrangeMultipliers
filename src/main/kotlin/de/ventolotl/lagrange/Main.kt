@@ -4,7 +4,7 @@ import de.ventolotl.lagrange.maths.Constraint
 import de.ventolotl.lagrange.maths.Function3d
 import de.ventolotl.lagrange.maths.Vector2d
 import de.ventolotl.lagrange.maths.createContour
-import de.ventolotl.lagrange.ui.ContourRenderer
+import de.ventolotl.lagrange.ui.ContourExtraRenderer
 import de.ventolotl.lagrange.ui.mapToColors
 import de.ventolotl.lagrange.utility.range
 import java.awt.Color
@@ -53,7 +53,7 @@ fun main() {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
 
     val window = JFrame("Lagrange Multipliers")
-    val contourConstraint = ContourRenderer(
+    val contourConstraint = ContourExtraRenderer(
         function3d = functionToOptimize,
         constraint = constraint,
         contourLines = contour,

@@ -1,61 +1,48 @@
 package de.ventolotl.lagrange.ui
 
-import de.ventolotl.lagrange.maths.*
+import de.ventolotl.lagrange.maths.Constraint
+import de.ventolotl.lagrange.maths.Function3d
+import de.ventolotl.lagrange.maths.optimize
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
-import javax.swing.SwingUtilities
+import java.awt.image.BufferedImage
 
-class ContourRenderer(
+open class ContourRenderer(
     val contourLines: List<ContourLineColored>,
     val constraint: Constraint,
     scalingFactor: Int,
-    private val function3d: Function3d
+    val function3d: Function3d
 ) : GridRenderer(scalingFactor) {
-    private val contourFont by lazy {
-        Font(graphics.font.name, Font.PLAIN, 50)
+    val contourFont by lazy {
+        Font(graphics.font.name, Font.PLAIN, 20)
     }
 
     private val solutions = function3d.optimize(constraint)
-
-    private val gradientOptimizeFunc = function3d.gradient()
-    private val gradientConstraintFunc = constraint.equation.gradient()
-
-    private var dragged = false
-    private var movingGradientContours = (0..10).map { i ->
-        val index = ((contourLines.size - 1) * i / 10.0).toInt()
-        contourLines[index]
-    }
-    private var renderData: RenderData? = null
-
-    init {
-        val mouseAdapter = object : MouseAdapter() {
-            override fun mousePressed(e: MouseEvent?) {
-                dragged = !dragged
-            }
-
-            override fun mouseMoved(event: MouseEvent) {
-                if (dragged) {
-                    createGradients(event.x, event.y)
-                }
-            }
-        }
-        addMouseListener(mouseAdapter)
-        addMouseMotionListener(mouseAdapter)
-    }
+    private var computedContour: BufferedImage? = null
 
     override fun render(graphics: Graphics) {
         super.render(graphics)
 
+        val contourImage = this.computedContour
+            ?: BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+
         graphics.font = contourFont
 
-        repaintContours(graphics)
-        repaintGradient(graphics)
+        if (this.computedContour == null) {
+            val imageGraphics = contourImage.createGraphics()
+            paintContours(imageGraphics)
+            this.computedContour = contourImage
+        }
+
+        graphics.drawImage(contourImage, 0, 0, this)
     }
 
-    private fun repaintContours(graphics: Graphics) {
+    override fun resize() {
+        computedContour = null
+    }
+
+    private fun paintContours(graphics: Graphics) {
         contourLines.forEach { line ->
             FunctionRenderer.renderGraph(graphics, this, line.points, line.color)
         }
@@ -68,83 +55,7 @@ class ContourRenderer(
             val text = "(%.3f, %.3f) at z=%.3f".format(
                 solution.x, solution.y, function3d.eval(solution.x, solution.y)
             )
-            graphics.drawText(text, windowPoint, Color.WHITE, font)
+            graphics.drawText(text, windowPoint, Color.WHITE, contourFont)
         }
-    }
-
-    private fun repaintGradient(graphics: Graphics) {
-        renderData?.let { renderData ->
-            renderGradient(graphics, renderData.gradientData1)
-            renderGradient(graphics, renderData.gradientData2)
-        }
-    }
-
-    private fun renderGradient(graphics: Graphics, gradientData: GradientData) {
-        val point = gradientData.point
-        val vector = gradientData.vector
-
-        graphics.drawCircle(point, radius = 15, gradientData.color)
-        graphics.drawArrowLine(point, vector, 10, 10)
-    }
-
-    private fun createGradients(mouseX: Int, mouseY: Int) {
-        val mousePoint = Vector2d(mouseX, mouseY)
-        val algebraicMousePoint = windowToAlgebraicCoordinates(mousePoint)
-
-        val gradient1 = createGradientOptimizeFunction(algebraicMousePoint)
-        val gradient2 = createGradientConstraintFunction(algebraicMousePoint)
-
-        renderData = RenderData(gradient1, gradient2)
-
-        SwingUtilities.invokeLater { repaint() }
-    }
-
-    private fun createGradientOptimizeFunction(algebraicMousePoint: Vector2d<Double>): GradientData {
-        val contourClosestPoints = movingGradientContours
-            .filter { line -> line.points.isNotEmpty() }
-            .associateWith { line ->
-                line.points.minBy { it.distSq(algebraicMousePoint) }
-            }
-        val (contour, nearestPoint) = contourClosestPoints.minBy { (_, point) ->
-            point.distSq(algebraicMousePoint)
-        }
-
-        return createGradientFunction(nearestPoint, gradientOptimizeFunc, contour.color)
-    }
-
-    private fun createGradientConstraintFunction(algebraicMousePoint: Vector2d<Double>): GradientData {
-        val nearestPoint = constraint.points.minBy { point ->
-            point.distSq(algebraicMousePoint)
-        }
-        return createGradientFunction(nearestPoint, gradientConstraintFunc, constraint.color)
-    }
-
-    private fun createGradientFunction(
-        nearestPoint: Vector2d<Double>,
-        gradientFunc: Vector2d<Function3d>,
-        color: Color
-    ): GradientData {
-        val nearestX = nearestPoint.x
-        val nearestY = nearestPoint.y
-
-        val gradient = Vector2d(
-            gradientFunc.x.eval(nearestX, nearestY),
-            gradientFunc.y.eval(nearestX, nearestY)
-        )
-        val adjustedGradient = Vector2d(gradient.x + nearestX, gradient.y + nearestY)
-
-        return GradientData(
-            algebraicToWindowCoordinates(nearestPoint),
-            algebraicToWindowCoordinates(adjustedGradient),
-            color
-        )
     }
 }
-
-data class RenderData(val gradientData1: GradientData, val gradientData2: GradientData)
-
-data class GradientData(
-    val point: Vector2d<Int>,
-    val vector: Vector2d<Int>,
-    val color: Color
-)
