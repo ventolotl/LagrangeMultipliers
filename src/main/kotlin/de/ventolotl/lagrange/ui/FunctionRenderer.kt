@@ -1,7 +1,6 @@
 package de.ventolotl.lagrange.ui
 
 import de.ventolotl.lagrange.maths.Vector2d
-import de.ventolotl.lagrange.utility.Vector2dRange
 import de.ventolotl.lagrange.utility.distSq
 import de.ventolotl.lagrange.utility.pow
 import java.awt.Color
@@ -15,13 +14,8 @@ internal object FunctionRenderer {
         color: Color,
         width: Float = 20F
     ) {
-        val windowRange = Vector2dRange(
-            0..gridRenderer.width,
-            0..gridRenderer.height
-        )
         val windowCoordinates = points
             .map(gridRenderer::algebraicToWindowCoordinates)
-            .filter { point -> point in windowRange }
             .toMutableList()
         val first = windowCoordinates.firstOrNull() ?: return
         var lastPoint = first
