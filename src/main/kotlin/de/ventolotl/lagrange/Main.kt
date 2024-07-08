@@ -16,7 +16,7 @@ import kotlin.math.max
 import kotlin.math.nextUp
 
 private val colors = (0..<255 step 10).map {
-    Color(it / 8, 255 - it, it).brighter()
+    Color(it / 8, 255 - it, it)
 }.toTypedArray()
 
 fun main() {
