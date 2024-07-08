@@ -18,9 +18,15 @@ fun Function3d.createContour(
         val correspondingFunction = Function3d { x, y -> eval(x, y) - z }
 
         val points = correspondingFunction.findRootsNewton(pointsRange, accuracy)
-        println("for $z: points=${points.size}")
-        if (points.isNotEmpty()) {
-            contour.add(ContourLine(z, points))
+        val pointsInRange = points.filter { point ->
+            val zValue = this.eval(point.x, point.y)
+            point in pointsRange && zValue in zRange
+        }
+
+        println("z=$z: points=${points.size}, relevant=${pointsInRange.size}")
+
+        if (pointsInRange.isNotEmpty()) {
+            contour.add(ContourLine(z, pointsInRange))
         }
     }
 
