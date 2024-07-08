@@ -71,7 +71,7 @@ class ContourExtraRenderer(
             renderGradient(graphics, constraintGradient)
 
             // Render cursor z
-            val text = "z=${cursorData.z}"
+            val text = "z=%.3f".format(cursorData.z)
             graphics.drawText(text, cursorData.pos, Color.WHITE, contourFont)
         }
     }
