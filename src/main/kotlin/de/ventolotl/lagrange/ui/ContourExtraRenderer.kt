@@ -15,7 +15,7 @@ import kotlin.math.roundToInt
 private const val LEGEND_X_OFFSET = 40
 private const val LEGEND_Y_OFFSET = 40
 private const val LEGEND_BORDER_SIZE = 10
-private const val LEGEND_RECT_SPACING_SIZE = 20
+private const val LEGEND_RECT_SPACING_SIZE = 30
 private const val LEGEND_RECT_SIZE_PCT = 0.8
 private const val LEGEND_LENGTH = 4
 
@@ -166,8 +166,7 @@ class ContourExtraRenderer(
         val rectSize = (textHeight * LEGEND_RECT_SIZE_PCT).roundToInt()
 
         // Create the texts
-        val texts = mutableListOf("Legend:")
-        elements.forEach { (value, _) -> texts.add("z=$value") }
+        val texts = elements.map { (zValue, _) -> "z=$zValue" }
 
         // Calculate the maximum width
         val elementWidth = texts.maxOf { text -> fontMetrics.stringWidth(text) }.toInt()
@@ -175,7 +174,7 @@ class ContourExtraRenderer(
         val rectX = LEGEND_X_OFFSET + LEGEND_RECT_SPACING_SIZE + elementWidth - rectSize
 
         val width = 2 * LEGEND_BORDER_SIZE + LEGEND_RECT_SPACING_SIZE + elementWidth
-        val height = LEGEND_Y_OFFSET + textHeight + textHeight * (elements.size - 1) + LEGEND_BORDER_SIZE
+        val height = LEGEND_Y_OFFSET + textHeight * (elements.size - 1) + LEGEND_BORDER_SIZE
 
         // Draw rect
         graphics.color = Color(30, 30, 30)
@@ -186,16 +185,12 @@ class ContourExtraRenderer(
             height
         )
 
-        // Draw legend
-        graphics.color = Color.WHITE
-        graphics.drawString(texts[0], LEGEND_X_OFFSET, LEGEND_Y_OFFSET + textHeight)
-
         // Draw heights
         elements.withIndex().forEach { (index, element) ->
-            val textY = LEGEND_Y_OFFSET + 2 * textHeight + textHeight * index
+            val textY = LEGEND_Y_OFFSET + textHeight + textHeight * index
 
             graphics.color = Color.WHITE
-            graphics.drawString(texts[index + 1], LEGEND_X_OFFSET, textY)
+            graphics.drawString(texts[index], LEGEND_X_OFFSET, textY)
 
             graphics.color = element.second
             graphics.fillRect(rectX, textY - fontMetrics.ascent, rectSize, rectSize)
