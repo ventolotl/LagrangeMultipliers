@@ -65,14 +65,14 @@ class ContourExtraRenderer(
     }
 
     private fun paintRenderData(graphics: Graphics) {
-        renderData?.let { (cursorData, optimizeGradient, constraintGradient) ->
+        renderData?.let { (cursorZ, optimizeGradient, constraintGradient) ->
             // Render gradients
             renderGradient(graphics, optimizeGradient)
             renderGradient(graphics, constraintGradient)
 
             // Render cursor z
-            val text = "z=%.3f".format(cursorData.z)
-            graphics.drawText(text, cursorData.pos, Color.WHITE, contourFont)
+            val text = "z=%.3f".format(cursorZ)
+            graphics.drawText(text, Vector2d(width - 100, 50), Color.WHITE, contourFont)
         }
     }
 
@@ -87,14 +87,12 @@ class ContourExtraRenderer(
     private fun createGradients(mouseX: Int, mouseY: Int) {
         val mousePoint = Vector2d(mouseX, mouseY)
         val algebraicMousePoint = windowToAlgebraicCoordinates(mousePoint)
-
         val cursorZ = function3d.eval(algebraicMousePoint.x, algebraicMousePoint.y)
-        val cursorData = CursorData(cursorZ, Vector2d(mouseX, mouseY - 30))
 
         val optimizeFunctionGradient = createGradientOptimizeFunction(algebraicMousePoint)
         val constraintFunctionGradient = createGradientConstraintFunction(algebraicMousePoint)
 
-        renderData = RenderData(cursorData, optimizeFunctionGradient, constraintFunctionGradient)
+        renderData = RenderData(cursorZ, optimizeFunctionGradient, constraintFunctionGradient)
 
         SwingUtilities.invokeLater { repaint() }
     }
@@ -199,14 +197,9 @@ class ContourExtraRenderer(
 }
 
 private data class RenderData(
-    val cursor: CursorData,
+    val z: Double,
     val optimizeGradient: GradientData,
     val constraintGradient: GradientData
-)
-
-private data class CursorData(
-    val z: Double,
-    val pos: Vector2d<Int>
 )
 
 private data class GradientData(
