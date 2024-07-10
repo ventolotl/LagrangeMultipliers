@@ -53,17 +53,17 @@ class EquationSolver(
         }
     }
 
-    private fun iterate(initialGuess: Vector3d<Double>): Vector3d<Double>? {
+    private fun iterate(guess: Vector3d<Double>): Vector3d<Double>? {
         // Compute Jacobian
-        val j11 = f1PartialX.eval(initialGuess)
-        val j12 = f1PartialY.eval(initialGuess)
-        val j13 = f1PartialZ.eval(initialGuess)
-        val j21 = f2PartialX.eval(initialGuess)
-        val j22 = f2PartialY.eval(initialGuess)
-        val j23 = f2PartialZ.eval(initialGuess)
-        val j31 = f3PartialX.eval(initialGuess)
-        val j32 = f3PartialY.eval(initialGuess)
-        val j33 = f3PartialZ.eval(initialGuess)
+        val j11 = f1PartialX.eval(guess)
+        val j12 = f1PartialY.eval(guess)
+        val j13 = f1PartialZ.eval(guess)
+        val j21 = f2PartialX.eval(guess)
+        val j22 = f2PartialY.eval(guess)
+        val j23 = f2PartialZ.eval(guess)
+        val j31 = f3PartialX.eval(guess)
+        val j32 = f3PartialY.eval(guess)
+        val j33 = f3PartialZ.eval(guess)
 
         // Invert the Jacobian
         // 1) Calculate the determinant
@@ -89,9 +89,9 @@ class EquationSolver(
         val inverse33 = j11 * j22 - j12 * j21
 
         // Compute negative F
-        val f1 = -f1.eval(initialGuess)
-        val f2 = -f2.eval(initialGuess)
-        val f3 = -f3.eval(initialGuess)
+        val f1 = -f1.eval(guess)
+        val f2 = -f2.eval(guess)
+        val f3 = -f3.eval(guess)
 
         // Multiply the inverse matrix (det * elements) and the vector -F
         return Vector3d(
