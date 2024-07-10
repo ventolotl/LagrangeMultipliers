@@ -9,10 +9,10 @@ class EquationSystemSolver {
     @Test
     fun test() {
         val f1 = Function3d { x: Double, y: Double ->
-            x * x + y * y - 4
+            x * x + y * y - 2
         }
         val f2 = Function3d { x: Double, y: Double ->
-            x * x * x - y
+            x + y
         }
 
         // The elements of the Jacobian Matrix
@@ -21,41 +21,53 @@ class EquationSystemSolver {
         val j21 = f2.partialX()
         val j22 = f2.partialY()
 
-        val initialGuess = Vector2d(1.0, 1.0)
+        val initialGuess = Vector2d(0.0, 0.05)
+        var guess = initialGuess
 
+        repeat(10) {
+            val delta = iterate(f1, f2, j11, j12, j21, j22, guess)
+            if (delta == null) {
+                println("System of equations is not solvable")
+                return
+            }
+
+            guess = Vector2d(guess.x + delta.x, guess.y + delta.y)
+            println("guess=$guess")
+        }
+
+        println(guess)
+        println("f1=${f1.eval(guess)}, f2=${f2.eval(guess)}")
+    }
+
+    private fun iterate(
+        f1: Function3d,
+        f2: Function3d,
+        f1PartialX: Function3d,
+        f1PartialY: Function3d,
+        f2PartialX: Function3d,
+        f2PartialY: Function3d,
+        initialGuess: Vector2d<Double>
+    ): Vector2d<Double>? {
         // Compute negative F
         val F1 = -f1.eval(initialGuess)
         val F2 = -f2.eval(initialGuess)
 
-        println("F: <$F1, $F2>")
-
         // Compute Jacobian
-        val J11 = j11.eval(initialGuess)
-        val J12 = j12.eval(initialGuess)
-        val J21 = j21.eval(initialGuess)
-        val J22 = j22.eval(initialGuess)
+        val valueF1PartialX = f1PartialX.eval(initialGuess)
+        val valueF1PartialY = f1PartialY.eval(initialGuess)
+        val valueF2PartialX = f2PartialX.eval(initialGuess)
+        val valueF2PartialY = f2PartialY.eval(initialGuess)
 
-        println("Jacobian:")
-        println("($J11, $J12)")
-        println("($J21, $J22)")
-
-        val det = J11 * J22 - J12 * J21
+        // Invert the Jacobian
+        val det = valueF1PartialX * valueF2PartialY - valueF1PartialY * valueF2PartialX
+        if (det == 0.0) {
+            return null
+        }
         val detReciprocal = 1.0 / det
 
-        val inverseJ11 = detReciprocal * J22
-        val inverseJ12 = -detReciprocal * J12
-        val inverseJ21 = -detReciprocal * J21
-        val inverseJ22 = detReciprocal * J11
-
-        val deltaX = detReciprocal * (inverseJ11 * F1 - inverseJ12 * F2)
-        val deltaY = detReciprocal * (inverseJ21 * F1 - inverseJ22 * F2)
-
-        println("det=$det * 8")
-        println("inverse:")
-        println("(${inverseJ11} , $inverseJ12)")
-        println("($inverseJ21, $inverseJ22)")
-
-        println("$deltaX, $deltaY")
-        println("expected ${1.0 / 4.0}, ")
+        return Vector2d(
+            detReciprocal * (valueF2PartialY * F1 - valueF1PartialY * F2),
+            detReciprocal * (-valueF2PartialX * F1 + valueF1PartialX * F2)
+        )
     }
 }
