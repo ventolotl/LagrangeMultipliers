@@ -1,6 +1,7 @@
 package de.ventolotl.lagrange.maths
 
 import de.ventolotl.lagrange.utility.Range
+import de.ventolotl.lagrange.utility.Vector2d
 import de.ventolotl.lagrange.utility.Vector2dRange
 import de.ventolotl.lagrange.utility.iterate
 import kotlin.math.absoluteValue

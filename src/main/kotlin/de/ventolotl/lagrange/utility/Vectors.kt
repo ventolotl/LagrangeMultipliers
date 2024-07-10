@@ -1,4 +1,4 @@
-package de.ventolotl.lagrange.maths
+package de.ventolotl.lagrange.utility
 
 import kotlin.math.sqrt
 

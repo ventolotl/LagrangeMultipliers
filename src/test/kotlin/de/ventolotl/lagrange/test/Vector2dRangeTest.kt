@@ -1,6 +1,6 @@
 package de.ventolotl.lagrange.test
 
-import de.ventolotl.lagrange.maths.Vector2d
+import de.ventolotl.lagrange.utility.Vector2d
 import de.ventolotl.lagrange.utility.Vector2dRange
 import org.junit.Assert
 import kotlin.test.Test

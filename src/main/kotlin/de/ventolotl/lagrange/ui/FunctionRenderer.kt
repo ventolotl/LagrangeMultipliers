@@ -1,6 +1,6 @@
 package de.ventolotl.lagrange.ui
 
-import de.ventolotl.lagrange.maths.Vector2d
+import de.ventolotl.lagrange.utility.Vector2d
 import de.ventolotl.lagrange.utility.distSq
 import de.ventolotl.lagrange.utility.pow
 import java.awt.Color

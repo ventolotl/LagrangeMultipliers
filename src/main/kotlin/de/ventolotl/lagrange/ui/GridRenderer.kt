@@ -1,6 +1,6 @@
 package de.ventolotl.lagrange.ui
 
-import de.ventolotl.lagrange.maths.Vector2d
+import de.ventolotl.lagrange.utility.Vector2d
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D

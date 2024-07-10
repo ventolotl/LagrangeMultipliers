@@ -1,7 +1,5 @@
 package de.ventolotl.lagrange.utility
 
-import de.ventolotl.lagrange.maths.Vector2d
-
 data class Range<T : Comparable<T>>(private val start0: T, private val end0: T) {
     val start = if (start0 < end0) start0 else end0
     val end = if (start0 > end0) start0 else end0

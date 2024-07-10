@@ -1,5 +1,7 @@
 package de.ventolotl.lagrange.maths
 
+import de.ventolotl.lagrange.utility.Vector2d
+import de.ventolotl.lagrange.utility.Vector3d
 import de.ventolotl.lagrange.utility.distSq
 import de.ventolotl.lagrange.utility.iterate
 

@@ -2,8 +2,8 @@ package de.ventolotl.lagrange.ui
 
 import de.ventolotl.lagrange.maths.Constraint
 import de.ventolotl.lagrange.maths.Function3d
-import de.ventolotl.lagrange.maths.Vector2d
-import de.ventolotl.lagrange.maths.distSq
+import de.ventolotl.lagrange.utility.Vector2d
+import de.ventolotl.lagrange.utility.distSq
 import de.ventolotl.lagrange.utility.Vector2dRange
 import java.awt.Color
 import java.awt.Graphics

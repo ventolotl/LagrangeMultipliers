@@ -2,7 +2,7 @@ package de.ventolotl.lagrange
 
 import de.ventolotl.lagrange.maths.Constraint
 import de.ventolotl.lagrange.maths.Function3d
-import de.ventolotl.lagrange.maths.Vector2d
+import de.ventolotl.lagrange.utility.Vector2d
 import de.ventolotl.lagrange.maths.createContour
 import de.ventolotl.lagrange.ui.ContourExtraRenderer
 import de.ventolotl.lagrange.ui.mapToColors
@@ -11,9 +11,7 @@ import java.awt.Color
 import javax.swing.JFrame
 import javax.swing.UIManager
 import javax.swing.WindowConstants
-import kotlin.math.absoluteValue
-import kotlin.math.max
-import kotlin.math.nextUp
+import kotlin.math.*
 
 private val colors = (0..<255 step 10).map {
     Color(it / 8, 255 - it, it)

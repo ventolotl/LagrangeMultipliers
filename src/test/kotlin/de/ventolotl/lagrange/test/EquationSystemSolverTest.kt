@@ -2,7 +2,7 @@ package de.ventolotl.lagrange.test
 
 import de.ventolotl.lagrange.maths.EquationSolver
 import de.ventolotl.lagrange.maths.Function4d
-import de.ventolotl.lagrange.maths.Vector3d
+import de.ventolotl.lagrange.utility.Vector3d
 import org.junit.Test
 
 // This test is meant to provide an implementation for solving a non-linear system of equations

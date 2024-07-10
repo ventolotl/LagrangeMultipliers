@@ -1,5 +1,7 @@
 package de.ventolotl.lagrange.maths
 
+import de.ventolotl.lagrange.utility.Vector3d
+import de.ventolotl.lagrange.utility.distSq
 import kotlin.math.absoluteValue
 
 private const val MAX_ITERATIONS = 1000

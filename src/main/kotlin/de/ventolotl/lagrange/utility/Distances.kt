@@ -1,6 +1,5 @@
 package de.ventolotl.lagrange.utility
 
-import de.ventolotl.lagrange.maths.Vector2d
 import kotlin.math.sqrt
 
 fun <T : Number> Vector2d<T>.dist(other: Vector2d<T>): Double {

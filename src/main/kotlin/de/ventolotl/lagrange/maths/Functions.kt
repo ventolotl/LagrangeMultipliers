@@ -1,5 +1,8 @@
 package de.ventolotl.lagrange.maths
 
+import de.ventolotl.lagrange.utility.Vector2d
+import de.ventolotl.lagrange.utility.Vector3d
+
 const val EPSILON = 1e-5
 
 fun interface Function2d {
