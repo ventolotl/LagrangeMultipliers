@@ -5,6 +5,10 @@ const val EPSILON = 1e-5
 fun interface Function3d {
     fun eval(x: Double, y: Double): Double
 
+    fun eval(vector2d: Vector2d<Double>): Double {
+        return eval(vector2d.x, vector2d.y)
+    }
+
     fun evalX(x: Double): Function2d {
         return Function2d { y -> eval(x, y) }
     }
