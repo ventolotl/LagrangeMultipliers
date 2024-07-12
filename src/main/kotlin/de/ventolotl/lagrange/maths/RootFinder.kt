@@ -4,7 +4,7 @@ import de.ventolotl.lagrange.utility.Range
 import de.ventolotl.lagrange.utility.Vector2d
 import de.ventolotl.lagrange.utility.Vector2dRange
 import de.ventolotl.lagrange.utility.iterate
-import kotlin.math.absoluteValue
+import kotlin.math.abs
 
 // Error reduces ^2 each iteration, so 50 should be enough
 private const val NEWTON_ITERATIONS = 50
@@ -56,12 +56,13 @@ fun Function2d.rootFinder2dExact(guess: Double): Double? {
 
     repeat(NEWTON_ITERATIONS) {
         val yValue = this.eval(currentX)
+        val nextX = currentX - yValue / derivative.eval(currentX)
 
-        if (yValue.absoluteValue < 1e-5) {
-            return currentX
+        if (abs(currentX - nextX) < 1e-5) {
+            return nextX
         }
 
-        currentX -= yValue / derivative.eval(currentX)
+        currentX = nextX
     }
 
     return null
