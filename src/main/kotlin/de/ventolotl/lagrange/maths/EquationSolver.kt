@@ -1,11 +1,9 @@
 package de.ventolotl.lagrange.maths
 
 import de.ventolotl.lagrange.utility.Vector3d
-import de.ventolotl.lagrange.utility.distSq
-import kotlin.math.absoluteValue
+import de.ventolotl.lagrange.utility.lenSq
 
-private const val MAX_ITERATIONS = 1000
-private const val THRESHOLD = 1e-5
+private const val MAX_ITERATIONS = 500000
 
 // This equation solver can solve a non-linear system of 3 equations with 3 unknowns
 class EquationSolver(
@@ -34,23 +32,14 @@ class EquationSolver(
             )
 
             // Solution already close enough
-            val distSq = guess.distSq(newGuess)
-            if (distSq < 1e-10) {
-                return guess
-            }
-
             guess = newGuess
+
+            if (delta.lenSq() < 1e-5) {
+                return newGuess
+            }
         }
 
-        return if (
-            f1.eval(guess).absoluteValue < THRESHOLD &&
-            f2.eval(guess).absoluteValue < THRESHOLD &&
-            f3.eval(guess).absoluteValue < THRESHOLD
-        ) {
-            guess
-        } else {
-            null
-        }
+        return null
     }
 
     private fun iterate(guess: Vector3d<Double>): Vector3d<Double>? {

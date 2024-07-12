@@ -4,8 +4,8 @@ import kotlin.math.sqrt
 
 data class Vector2d<T>(var x: T, var y: T)
 
-fun Vector2d<Int>.toDoubleVec(): Vector2d<Double> {
-    return Vector2d(x.toDouble(), y.toDouble())
+fun Vector2d<Double>.lenSq(): Double {
+    return x * x + y * y
 }
 
 fun Vector2d<Double>.dist(other: Vector2d<Double>): Double {
@@ -20,8 +20,8 @@ fun Vector2d<Double>.distSq(other: Vector2d<Double>): Double {
 
 data class Vector3d<T>(var x: T, var y: T, var z: T)
 
-fun Vector3d<Int>.toDoubleVec(): Vector3d<Double> {
-    return Vector3d(x.toDouble(), y.toDouble(), z.toDouble())
+fun Vector3d<Double>.lenSq(): Double {
+    return x * x + y * y + z * z
 }
 
 fun Vector3d<Double>.dist(other: Vector3d<Double>): Double {
