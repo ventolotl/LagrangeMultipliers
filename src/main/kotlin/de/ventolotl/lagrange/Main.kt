@@ -2,72 +2,71 @@ package de.ventolotl.lagrange
 
 import de.ventolotl.lagrange.maths.Constraint
 import de.ventolotl.lagrange.maths.Function3d
-import de.ventolotl.lagrange.utility.Vector2d
 import de.ventolotl.lagrange.maths.createContour
-import de.ventolotl.lagrange.ui.ContourExtraRenderer
+import de.ventolotl.lagrange.ui.LagrangePane
 import de.ventolotl.lagrange.ui.mapToColors
+import de.ventolotl.lagrange.utility.Vector2d
 import de.ventolotl.lagrange.utility.range
-import java.awt.Color
-import javax.swing.JFrame
-import javax.swing.UIManager
-import javax.swing.WindowConstants
-import kotlin.math.*
+import javafx.application.Application
+import javafx.scene.Scene
+import javafx.scene.paint.Color
+import javafx.stage.Stage
+import kotlin.math.cos
 
-private val colors = (0..<255 step 10).map {
-    Color(it / 8, 255 - it, it)
-}.toTypedArray()
+const val WIN_WIDTH = 1000.0
+const val WIN_HEIGHT = 1000.0
 
 fun main() {
-    val zRange = -50.0 range 200.0
-    val zAccuracy = 0.25
-    val area = 15.0
-    val pointsRange = Vector2d(-area, -area) range Vector2d(area, area)
-    val accuracy = 50
+    Application.launch(LagrangeMultipliersUI::class.java)
+}
 
-    val functionToOptimize = Function3d { x, y ->
-        x * x + y * y
-    }
+class LagrangeMultipliersUI : Application() {
+    private val colors = (0..<255 step 10).map {
+        Color.rgb(it / 8, 255 - it, it)
+    }.toTypedArray()
 
-    val constraintEq = Function3d { x, y ->
-        x * y
-    }
-    val constraintValue = 2.0
+    override fun start(stage: Stage) {
+        val zRange = -50.0 range 200.0
+        val zAccuracy = 0.2
+        val area = 13.0
+        val pointsRange = Vector2d(-area, -area) range Vector2d(area, area)
+        val accuracy = 100
 
-    val constraint = Constraint(
-        equation = constraintEq,
-        constant = constraintValue,
-        range = pointsRange,
-        accuracy = accuracy
-    )
-    val contour = functionToOptimize.createContour(
-        zRange = zRange,
-        zAccuracy = zAccuracy,
-        pointsRange = pointsRange,
-        accuracy = accuracy
-    ).mapToColors(colors)
+        val functionToOptimize = Function3d { x, y ->
+            x * x + y * y
+        }
 
-    println("contour created")
+        val constraintEq = Function3d { x, y ->
+            x * cos(y)
+        }
+        val constraintValue = 1.0
 
-    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+        val constraint = Constraint(
+            equation = constraintEq,
+            constant = constraintValue,
+            range = pointsRange,
+            accuracy = accuracy
+        )
+        val contour = functionToOptimize.createContour(
+            zRange = zRange,
+            zAccuracy = zAccuracy,
+            pointsRange = pointsRange,
+            accuracy = accuracy
+        ).mapToColors(colors)
 
-    val window = JFrame("Lagrange Multipliers")
-    val contourConstraint = ContourExtraRenderer(
-        function3d = functionToOptimize,
-        constraint = constraint,
-        contourLines = contour,
-        scalingFactor = max(
-            max(pointsRange.startX.absoluteValue, pointsRange.startY.absoluteValue),
-            max(pointsRange.endX.absoluteValue, pointsRange.endY.absoluteValue)
-        ).nextUp().toInt()
-    )
+        val renderer = LagrangePane(
+            function3d = functionToOptimize,
+            constraint = constraint,
+            contourLines = contour,
+            scalingFactor = 10.0,
+            showGrid = true
+        )
 
-    println("total points: ${contour.sumOf { it.points.size }}")
+        val scene = Scene(renderer, WIN_WIDTH, WIN_HEIGHT)
 
-    window.add(contourConstraint)
-    window.apply {
-        pack()
-        defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-        setSize(1000, 1000)
-        isVisible = true
+        stage.title = "Lagrange Multipliers"
+        stage.scene = scene
+
+        stage.show()
     }
 }

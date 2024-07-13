@@ -2,7 +2,7 @@ package de.ventolotl.lagrange.ui
 
 import de.ventolotl.lagrange.maths.ContourLine
 import de.ventolotl.lagrange.utility.Vector2d
-import java.awt.Color
+import javafx.scene.paint.Color
 
 fun List<ContourLine>.mapToColors(color: Array<Color>): List<ContourLineColored> {
     return this.withIndex().map { (index, line) ->

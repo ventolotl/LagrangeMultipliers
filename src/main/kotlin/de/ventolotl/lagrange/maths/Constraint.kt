@@ -2,7 +2,7 @@ package de.ventolotl.lagrange.maths
 
 import de.ventolotl.lagrange.utility.Vector2d
 import de.ventolotl.lagrange.utility.Vector2dRange
-import java.awt.Color
+import javafx.scene.paint.Color
 
 data class Constraint(
     val equation: Function3d,
