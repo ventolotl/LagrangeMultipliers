@@ -12,6 +12,7 @@ import javafx.scene.Scene
 import javafx.scene.paint.Color
 import javafx.stage.Stage
 import kotlin.math.cos
+import kotlin.math.sin
 
 const val WIN_WIDTH = 1000.0
 const val WIN_HEIGHT = 1000.0
@@ -28,7 +29,7 @@ class LagrangeMultipliersUI : Application() {
     override fun start(stage: Stage) {
         val zRange = -50.0 range 200.0
         val zAccuracy = 0.2
-        val area = 13.0
+        val area = 10.0
         val pointsRange = Vector2d(-area, -area) range Vector2d(area, area)
         val accuracy = 100
 
@@ -37,9 +38,9 @@ class LagrangeMultipliersUI : Application() {
         }
 
         val constraintEq = Function3d { x, y ->
-            x * cos(y)
+            cos(x) * y + x * sin(y)
         }
-        val constraintValue = 1.0
+        val constraintValue = 2.0
 
         val constraint = Constraint(
             equation = constraintEq,
@@ -58,7 +59,7 @@ class LagrangeMultipliersUI : Application() {
             function3d = functionToOptimize,
             constraint = constraint,
             contourLines = contour,
-            scalingFactor = 10.0,
+            scalingFactor = area,
             showGrid = true
         )
 
