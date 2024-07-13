@@ -9,7 +9,7 @@ import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import kotlin.math.max
 
-class ContourPane(private val lagrangePane: LagrangePane, private val grid: GridPane) : UIFragment() {
+class ContourPane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFragment() {
     private val contourFont = Font.font("Arial", 15.0)
 
     private val function3d = lagrangePane.function3d
@@ -17,13 +17,18 @@ class ContourPane(private val lagrangePane: LagrangePane, private val grid: Grid
 
     private val solutions = function3d.optimize(constraint)
 
+    private val contourConnections = lagrangePane.contourLines.associateWith {
+        FunctionRenderer.computeAlgebraicConnections(it.points)
+    }
+    private val constraintConnections = FunctionRenderer.computeAlgebraicConnections(constraint.points)
+
     override fun paint() {
         val width = max(canvas.width, canvas.height) * 0.02
 
-        lagrangePane.contourLines.forEach { line ->
-            FunctionRenderer.renderGraph(ctx, grid, line.points, line.color, width)
+        contourConnections.forEach { (contour, connections) ->
+            FunctionRenderer.renderGraph(grid, ctx, connections, contour.color, width)
         }
-        FunctionRenderer.renderGraph(ctx, grid, constraint.points, constraint.color, width = 5.0)
+        FunctionRenderer.renderGraph(grid, ctx, constraintConnections, constraint.color, 4.0)
 
         solutions.forEach { solution ->
             val windowPoint = grid.algebraicToWindowCoordinates(solution)
