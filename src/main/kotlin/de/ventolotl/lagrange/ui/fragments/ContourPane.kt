@@ -11,6 +11,8 @@ import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import kotlin.math.max
 
+private const val DIST_TO_CONNECT = 0.5
+
 class ContourPane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFragment() {
     private val contourFont = Font.font("Arial", 15.0)
 
@@ -18,12 +20,12 @@ class ContourPane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFr
     private val constraint = lagrangePane.constraint
 
     private val solutions = function3d.optimize(constraint)
-    private val connectedSolutions = FunctionRenderer.computeAlgebraicConnections(solutions, 0.2)
+    private val connectedSolutions = FunctionRenderer.computeAlgebraicConnections(solutions, DIST_TO_CONNECT)
 
     private val contourConnections = lagrangePane.contourLines.associateWith {
-        FunctionRenderer.computeAlgebraicConnections(it.points, 1.0)
+        FunctionRenderer.computeAlgebraicConnections(it.points, DIST_TO_CONNECT)
     }
-    private val constraintConnections = FunctionRenderer.computeAlgebraicConnections(constraint.points, 1.0)
+    private val constraintConnections = FunctionRenderer.computeAlgebraicConnections(constraint.points, DIST_TO_CONNECT)
 
     override fun paint() {
         val width = max(canvas.width, canvas.height) * 0.02
