@@ -83,16 +83,16 @@ fun interface Function4d {
     fun partialY(): Function4d {
         return Function4d { x, y, z ->
             val df = eval(x, y + EPSILON, z) - eval(x, y, z)
-            val dx = EPSILON
-            df / dx
+            val dy = EPSILON
+            df / dy
         }
     }
 
     fun partialZ(): Function4d {
         return Function4d { x, y, z ->
             val df = eval(x, y, z + EPSILON) - eval(x, y, z)
-            val dx = EPSILON
-            df / dx
+            val dz = EPSILON
+            df / dz
         }
     }
 
