@@ -2,36 +2,37 @@ package de.ventolotl.lagrange.utility
 
 import kotlin.math.sqrt
 
+/// Vector2d
 data class Vector2d<T>(var x: T, var y: T)
+
+fun <T : Number> Vector2d<T>.dist(other: Vector2d<T>): Double {
+    return sqrt(this.distSq(other))
+}
+
+fun <T : Number> Vector2d<T>.distSq(other: Vector2d<T>): Double {
+    val deltaX = (this.x - other.x).toDouble()
+    val deltaY = (this.y - other.y).toDouble()
+    return deltaX * deltaX + deltaY * deltaY
+}
 
 fun Vector2d<Double>.lenSq(): Double {
     return x * x + y * y
 }
 
-fun Vector2d<Double>.dist(other: Vector2d<Double>): Double {
-    return sqrt(distSq(other))
-}
-
-fun Vector2d<Double>.distSq(other: Vector2d<Double>): Double {
-    val dx = this.x - other.x
-    val dy = this.y - other.y
-    return dx * dx + dy * dy
-}
-
+/// Vector3d
 data class Vector3d<T>(var x: T, var y: T, var z: T)
+
+fun <T : Number> Vector3d<T>.dist(other: Vector3d<T>): Double {
+    return sqrt(this.distSq(other))
+}
+
+fun <T : Number> Vector3d<T>.distSq(other: Vector3d<T>): Double {
+    val deltaX = (this.x - other.x).toDouble()
+    val deltaY = (this.y - other.y).toDouble()
+    val deltaZ = (this.z - other.z).toDouble()
+    return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ
+}
 
 fun Vector3d<Double>.lenSq(): Double {
     return x * x + y * y + z * z
 }
-
-fun Vector3d<Double>.dist(other: Vector3d<Double>): Double {
-    return sqrt(distSq(other))
-}
-
-fun Vector3d<Double>.distSq(other: Vector3d<Double>): Double {
-    val dx = this.x - other.x
-    val dy = this.y - other.y
-    val dz = this.z - other.z
-    return dx * dx + dy * dy + dz * dz
-}
-
