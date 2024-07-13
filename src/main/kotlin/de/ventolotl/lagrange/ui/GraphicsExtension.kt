@@ -18,7 +18,7 @@ internal fun GraphicsContext.fillOval(
 ) {
     val semiradius = radius / 2.0
     color?.let { this.fill = it }
-    this.fillOval(point.x - semiradius, point.y - semiradius, semiradius, semiradius)
+    this.fillOval(point.x - semiradius, point.y - semiradius, radius, radius)
 }
 
 internal fun GraphicsContext.write(
