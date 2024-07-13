@@ -51,7 +51,7 @@ class InteractivePane(lagrangePane: LagrangePane, private val grid: GridPane) : 
         val vector = gradientData.vector
 
         ctx.fillOval(point, 15.0, gradientData.color)
-        ctx.drawArrowLine(point, vector, 10.0, 10.0, Color.BLACK)
+        ctx.drawArrowLine(point, vector, 10.0, 10.0, gradientData.color)
     }
 
     private fun createGradients(mouseX: Double, mouseY: Double) {
@@ -74,7 +74,7 @@ class InteractivePane(lagrangePane: LagrangePane, private val grid: GridPane) : 
             point.distSq(algebraicMousePoint)
         }
 
-        return createGradientFunction(nearestPoint, gradientOptimizeFunc, contour.color)
+        return createGradientFunction(nearestPoint, gradientOptimizeFunc, contour.color.darker())
     }
 
     private fun createGradientConstraintFunction(algebraicMousePoint: Vector2d<Double>): GradientData {
@@ -97,7 +97,8 @@ class InteractivePane(lagrangePane: LagrangePane, private val grid: GridPane) : 
 
         return GradientData(
             grid.algebraicToWindowCoordinates(nearestPoint),
-            grid.algebraicToWindowCoordinates(adjustedGradient), color
+            grid.algebraicToWindowCoordinates(adjustedGradient),
+            color
         )
     }
 }
