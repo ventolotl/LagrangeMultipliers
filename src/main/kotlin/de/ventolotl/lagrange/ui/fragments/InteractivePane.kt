@@ -26,7 +26,7 @@ class InteractivePane(lagrangePane: LagrangePane, private val grid: GridPane) : 
             dragged = !dragged
         }
         setOnMouseMoved { event ->
-            if (dragged) {
+            if (dragged && constraint.points.isNotEmpty()) {
                 createGradients(event.x, event.y)
                 renderInteractiveMouse()
             }
