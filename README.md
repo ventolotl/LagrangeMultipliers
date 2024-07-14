@@ -12,8 +12,8 @@ A point $(x,y)$ is a solution to the optimization problem if and only if it lies
 ### Contour plot
 The contour plot is created by iterating through various values of z and thereafter solving the equation $f(x,y)=z$. 
 By fixing z, all points $(x,y)$ which satisfy the equation are colored similarly.
-The equation $f(x,y)=z$ is then solved by Newton's method while also fixing one of the two variables to project the function to a single-variable function.
-The initial guesses are determined by the [intermediate value theorem](https://www.wikiwand.com/en/Intermediate_value_theorem).
+The equation $f(x,y)=z$ is then solved by Newton's method while also fixing one of the two variables to project the function to a single-valued function.
+The initial guesses are determined by the [intermediate value theorem](https://en.wikipedia.org/wiki/Intermediate_value_theorem).
 
 ### Finding the optimization solutions
 To find a solution to the optimization problem, one must find $(x,y)$ which satisfy $\nabla f = \lambda \nabla g$ subject to $g(x,y)=0$.
