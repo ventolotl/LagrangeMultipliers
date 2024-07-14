@@ -19,7 +19,7 @@ class ContourPane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFr
     private val function3d = lagrangePane.function3d
     private val constraint = lagrangePane.constraint
 
-    private val solutions = function3d.optimize(constraint)
+    private val solutions = function3d.optimize(constraint.rootFunction, constraint.range, 0.05)
     private val connectedSolutions = FunctionRenderer.computeAlgebraicConnections(solutions, DIST_TO_CONNECT)
 
     private val contourConnections = lagrangePane.contourLines.associateWith {
@@ -51,7 +51,7 @@ class ContourPane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFr
         val visualizedSolutions = mutableListOf<Vector2d<Double>>()
         solutions.forEach { solution ->
             val solutionNearby = visualizedSolutions.any { other ->
-                other.distSq(solution) < 0.1
+                other.distSq(solution) < 0.01
             }
             if (solutionNearby) {
                 return@forEach

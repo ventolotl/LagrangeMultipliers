@@ -1,6 +1,7 @@
 package de.ventolotl.lagrange.ui.fragments
 
 import de.ventolotl.lagrange.maths.Function3d
+import de.ventolotl.lagrange.maths.optimize
 import de.ventolotl.lagrange.ui.LagrangePane
 import de.ventolotl.lagrange.ui.drawArrowLine
 import de.ventolotl.lagrange.ui.fillOval
@@ -8,13 +9,14 @@ import de.ventolotl.lagrange.utility.Vector2d
 import de.ventolotl.lagrange.utility.distSq
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
+import kotlin.math.abs
 
 class InteractivePane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFragment() {
     private val function3d = lagrangePane.function3d
     private val constraint = lagrangePane.constraint
 
     private val gradientOptimizeFunc = function3d.gradient()
-    private val gradientConstraintFunc = constraint.equation.gradient()
+    private val gradientConstraintFunc = constraint.rootFunction.gradient()
 
     private val contourLines = lagrangePane.contourLines
 
@@ -59,29 +61,34 @@ class InteractivePane(lagrangePane: LagrangePane, private val grid: GridPane) : 
         val algebraicMousePoint = grid.windowToAlgebraicCoordinates(mousePoint)
 
         val optimizeFunctionGradient = createGradientOptimizeFunction(algebraicMousePoint)
-        val constraintFunctionGradient = createGradientConstraintFunction(algebraicMousePoint)
+        val constraintFunctionGradient = createGradientConstraintFunction(algebraicMousePoint) ?: return
 
         renderData = RenderData(optimizeFunctionGradient, constraintFunctionGradient)
     }
 
     private fun createGradientOptimizeFunction(algebraicMousePoint: Vector2d<Double>): GradientData {
-        val contourClosestPoints = contourLines
-            .filter { line -> line.points.isNotEmpty() }
-            .associateWith { line ->
-                line.points.minBy { it.distSq(algebraicMousePoint) }
-            }
-        val (contour, nearestPoint) = contourClosestPoints.minBy { (_, point) ->
-            point.distSq(algebraicMousePoint)
-        }
+        val zValue = function3d.eval(algebraicMousePoint)
+        val color = contourLines.minBy { line -> abs(line.z - zValue) }.color
 
-        return createGradientFunction(nearestPoint, gradientOptimizeFunc, contour.color.darker())
+        return createGradientFunction(algebraicMousePoint, gradientOptimizeFunc, color.darker())
     }
 
-    private fun createGradientConstraintFunction(algebraicMousePoint: Vector2d<Double>): GradientData {
-        val nearestPoint = constraint.points.minBy { point ->
-            point.distSq(algebraicMousePoint)
+    private fun createGradientConstraintFunction(algebraicMousePoint: Vector2d<Double>): GradientData? {
+        val distFunction = Function3d { x, y ->
+            val deltaX = x - algebraicMousePoint.x
+            val deltaY = y - algebraicMousePoint.y
+            deltaX * deltaX + deltaY * deltaY
         }
-        return createGradientFunction(nearestPoint, gradientConstraintFunc, constraint.color)
+        val closestPoint = distFunction.optimize(
+            constraint.rootFunction, constraint.range, 1.0, 4000, 0.5
+        ).minByOrNull { point ->
+            point.distSq(algebraicMousePoint)
+        } ?: return null
+        return createGradientFunction(
+            closestPoint,
+            gradientConstraintFunc,
+            constraint.color
+        )
     }
 
     private fun createGradientFunction(
