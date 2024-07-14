@@ -5,7 +5,7 @@ import de.ventolotl.lagrange.utility.Vector2dRange
 import javafx.scene.paint.Color
 
 data class Constraint(
-    val equation: Function3d,
+    private val equation: Function3d,
     val constant: Double,
     val range: Vector2dRange<Double>,
     val accuracy: Int,
