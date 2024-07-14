@@ -36,6 +36,8 @@ internal object FunctionRenderer {
             remainingAlgebraicCoords.remove(nearest)
         }
 
+        jumps.add(lastPoint)
+
         // We have to iterate through all jumps to draw the remaining lines
         jumps.forEach { point1 ->
             jumps.forEach { point2 ->
