@@ -1,4 +1,4 @@
-package de.ventolotl.lagrange.ui
+package de.ventolotl.lagrange.ui.utility
 
 import de.ventolotl.lagrange.utility.Vector2d
 import javafx.scene.canvas.GraphicsContext

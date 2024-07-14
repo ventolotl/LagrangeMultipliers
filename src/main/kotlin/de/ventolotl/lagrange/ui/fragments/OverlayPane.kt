@@ -3,7 +3,7 @@ package de.ventolotl.lagrange.ui.fragments
 import com.sun.javafx.tk.Toolkit
 import de.ventolotl.lagrange.ui.ContourLineColored
 import de.ventolotl.lagrange.ui.LagrangePane
-import de.ventolotl.lagrange.ui.write
+import de.ventolotl.lagrange.ui.utility.write
 import de.ventolotl.lagrange.utility.Vector2d
 import de.ventolotl.lagrange.utility.Vector2dRange
 import javafx.scene.paint.Color

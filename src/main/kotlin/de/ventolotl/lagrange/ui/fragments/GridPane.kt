@@ -1,6 +1,6 @@
 package de.ventolotl.lagrange.ui.fragments
 
-import de.ventolotl.lagrange.ui.strokeLine
+import de.ventolotl.lagrange.ui.utility.strokeLine
 import de.ventolotl.lagrange.utility.Vector2d
 import javafx.scene.paint.Color
 import kotlin.math.roundToInt

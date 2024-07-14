@@ -1,7 +1,6 @@
 package de.ventolotl.lagrange.ui.utility
 
 import de.ventolotl.lagrange.ui.fragments.GridPane
-import de.ventolotl.lagrange.ui.strokeLine
 import de.ventolotl.lagrange.utility.Vector2d
 import de.ventolotl.lagrange.utility.distSq
 import javafx.scene.canvas.GraphicsContext

@@ -3,8 +3,8 @@ package de.ventolotl.lagrange.ui.fragments
 import de.ventolotl.lagrange.maths.Function3d
 import de.ventolotl.lagrange.maths.optimize
 import de.ventolotl.lagrange.ui.LagrangePane
-import de.ventolotl.lagrange.ui.drawArrowLine
-import de.ventolotl.lagrange.ui.fillOval
+import de.ventolotl.lagrange.ui.utility.drawArrowLine
+import de.ventolotl.lagrange.ui.utility.fillOval
 import de.ventolotl.lagrange.utility.Vector2d
 import de.ventolotl.lagrange.utility.distSq
 import javafx.scene.canvas.GraphicsContext

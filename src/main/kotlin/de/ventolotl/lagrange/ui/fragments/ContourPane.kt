@@ -2,9 +2,9 @@ package de.ventolotl.lagrange.ui.fragments
 
 import de.ventolotl.lagrange.maths.optimize
 import de.ventolotl.lagrange.ui.LagrangePane
-import de.ventolotl.lagrange.ui.fillOval
+import de.ventolotl.lagrange.ui.utility.fillOval
 import de.ventolotl.lagrange.ui.utility.FunctionRenderer
-import de.ventolotl.lagrange.ui.write
+import de.ventolotl.lagrange.ui.utility.write
 import de.ventolotl.lagrange.utility.Vector2d
 import de.ventolotl.lagrange.utility.distSq
 import javafx.scene.paint.Color
