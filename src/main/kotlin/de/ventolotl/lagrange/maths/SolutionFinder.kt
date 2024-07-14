@@ -14,29 +14,57 @@ fun Function3d.optimize(constraint: Constraint): List<Vector2d<Double>> {
     val constraintPartialX = constraintEq.partialX()
     val constraintPartialY = constraintEq.partialY()
 
+    val coordinatesScaling = 0.05
+
     val f1 = Function4d { x, y, lambda ->
-        functionToOptimizePartialX.eval(x, y) - lambda * constraintPartialX.eval(x, y)
+        val functionPartialXEval = functionToOptimizePartialX.eval(
+            coordinatesScaling * x,
+            coordinatesScaling * y
+        )
+        val constraintPartialXEval = constraintPartialX.eval(
+            coordinatesScaling * x,
+            coordinatesScaling * y
+        )
+        functionPartialXEval - lambda * constraintPartialXEval
     }
     val f2 = Function4d { x, y, lambda ->
-        functionToOptimizePartialY.eval(x, y) - lambda * constraintPartialY.eval(x, y)
+        val functionPartialYEval = functionToOptimizePartialY.eval(
+            coordinatesScaling * x,
+            coordinatesScaling * y
+        )
+        val constraintPartialYEval = constraintPartialY.eval(
+            coordinatesScaling * x,
+            coordinatesScaling * y
+        )
+        functionPartialYEval - lambda * constraintPartialYEval
     }
-    val g = Function4d { x, y, _ -> constraintEq.eval(x, y) }
+    val g = Function4d { x, y, _ ->
+        constraintEq.eval(coordinatesScaling * x, coordinatesScaling * y)
+    }
 
     val equationSolver = EquationSolver(f1, f2, g)
 
-    val solutions = mutableListOf<Vector3d<Double>>()
+    val coordinates = mutableListOf<Vector2d<Double>>()
 
-    constraint.range.iterate(0.05) { x, y ->
+    constraint.range.iterate(0.1) { x, y ->
         equationSolver.findSolution(Vector3d(x, y, 1.0))?.let { solution ->
-            val unknown = solutions.none { other ->
-                other.distSq(solution) < 0.01
-            }
+            val coordinate = Vector2d(
+                solution.x * coordinatesScaling,
+                solution.y * coordinatesScaling
+            )
 
-            if (unknown) {
-                solutions.add(solution)
+            val unknown = coordinates.none { other ->
+                other.distSq(coordinate) < 0.05
+            }
+            val inRange = coordinate in constraint.range
+
+            if (unknown && inRange) {
+                coordinates.add(coordinate)
             }
         }
     }
 
-    return solutions.map { (x, y, _) -> Vector2d(x, y) }
+    println("solutions=${coordinates.size}")
+
+    return coordinates
 }
