@@ -33,4 +33,3 @@ fun Function3d.createContour(
 
     return contour
 }
-
