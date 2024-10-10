@@ -1,16 +1,13 @@
 package de.ventolotl.lagrange.maths
 
-import de.ventolotl.lagrange.utility.Range
-import de.ventolotl.lagrange.utility.Vector2d
-import de.ventolotl.lagrange.utility.Vector2dRange
-import de.ventolotl.lagrange.utility.iterate
+import de.ventolotl.lagrange.utility.*
 import kotlin.math.abs
 
 // Error reduces ^2 each iteration, so 50 should be enough
 private const val NEWTON_ITERATIONS = 50
 
-fun Function3d.findRootsNewton(range: Vector2dRange<Double>, accuracy: Int = 100): List<Vector2d<Double>> {
-    val roots = mutableListOf<Vector2d<Double>>()
+fun Function3.findRootsNewton(range: Vector2dRange<Double>, accuracy: Int = 100): List<Vector2<Double>> {
+    val roots = mutableListOf<Vector2<Double>>()
 
     // Fix x in order to project 2-valued function to single-valued function
     val totalRangeX = range.endX - range.startX
@@ -19,7 +16,7 @@ fun Function3d.findRootsNewton(range: Vector2dRange<Double>, accuracy: Int = 100
     range.rangeX.iterate(stepSizeX) { fixedX ->
         val projectedY = this.evalX(fixedX)
         projectedY.findRootsNewton(range.rangeY, accuracy).forEach { rootY ->
-            roots.add(Vector2d(fixedX, rootY))
+            roots.add(Vector.of(fixedX, rootY))
         }
     }
 
@@ -30,7 +27,7 @@ fun Function3d.findRootsNewton(range: Vector2dRange<Double>, accuracy: Int = 100
     range.rangeY.iterate(stepSizeY) { fixedY ->
         val projectedX = this.evalY(fixedY)
         projectedX.findRootsNewton(range.rangeX, accuracy).forEach { rootX ->
-            roots.add(Vector2d(rootX, fixedY))
+            roots.add(Vector.of(rootX, fixedY))
         }
     }
 
@@ -42,7 +39,7 @@ fun Function2d.findRootsNewton(range: Range<Double>, accuracy: Int): List<Double
     val approximatedRoots = this.approximatedRoots(range, accuracy)
 
     approximatedRoots.forEach { initialGuess ->
-        this.rootFinder2dExact(initialGuess)?.let { root ->
+        this.findRootNewton(initialGuess)?.let { root ->
             roots.add(root)
         }
     }
@@ -50,7 +47,7 @@ fun Function2d.findRootsNewton(range: Range<Double>, accuracy: Int): List<Double
     return roots
 }
 
-fun Function2d.rootFinder2dExact(guess: Double): Double? {
+fun Function2d.findRootNewton(guess: Double): Double? {
     var currentX = guess
     val derivative = this.differentiate()
 

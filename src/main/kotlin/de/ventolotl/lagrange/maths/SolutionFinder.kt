@@ -3,15 +3,13 @@ package de.ventolotl.lagrange.maths
 import de.ventolotl.lagrange.utility.*
 
 private const val MAX_ITERATIONS = 500000
-private const val SCALING = 0.5
 
-fun Function3d.optimize(
-    constraintEq: Function3d,
+fun Function3.optimize(
+    constraintEq: Function3,
     range: Vector2dRange<Double>,
     stepSize: Double,
     maxIterations: Int = MAX_ITERATIONS,
-    scaling: Double = SCALING
-): List<Vector2d<Double>> {
+): List<Vector2<Double>> {
     val functionToOptimizePartialX = this.partialX()
     val functionToOptimizePartialY = this.partialY()
 
@@ -19,40 +17,25 @@ fun Function3d.optimize(
     val constraintPartialY = constraintEq.partialY()
 
     val f1 = Function4d { x, y, lambda ->
-        val functionPartialXEval = functionToOptimizePartialX.eval(
-            scaling * x,
-            scaling * y
-        )
-        val constraintPartialXEval = constraintPartialX.eval(
-            scaling * x,
-            scaling * y
-        )
+        val functionPartialXEval = functionToOptimizePartialX.eval(x, y)
+        val constraintPartialXEval = constraintPartialX.eval(x, y)
         functionPartialXEval + lambda * constraintPartialXEval
     }
     val f2 = Function4d { x, y, lambda ->
-        val functionPartialYEval = functionToOptimizePartialY.eval(
-            scaling * x,
-            scaling * y
-        )
-        val constraintPartialYEval = constraintPartialY.eval(
-            scaling * x,
-            scaling * y
-        )
+        val functionPartialYEval = functionToOptimizePartialY.eval(x, y)
+        val constraintPartialYEval = constraintPartialY.eval(x, y)
         functionPartialYEval + lambda * constraintPartialYEval
     }
     val g = Function4d { x, y, _ ->
-        constraintEq.eval(scaling * x, scaling * y)
+        constraintEq.eval(x, y)
     }
 
     val equationSolver = EquationSolver(f1, f2, g, maxIterations)
-    val coordinates = mutableListOf<Vector2d<Double>>()
+    val coordinates = mutableListOf<Vector2<Double>>()
 
     range.iterate(stepSize) { x, y ->
-        equationSolver.findSolution(Vector3d(x, y, 1.0))?.let { solution ->
-            val coordinate = Vector2d(
-                scaling * solution.x,
-                scaling * solution.y
-            )
+        equationSolver.findSolution(Vector.of(x, y, 1.0))?.let { solution ->
+            val coordinate = Vector.of(solution.x, solution.y)
 
             val unknown = coordinates.none { other ->
                 other.distSq(coordinate) < 0.1
@@ -85,27 +68,25 @@ class EquationSolver(
     private val f3PartialY = f3.partialY()
     private val f3PartialZ = f3.partialZ()
 
-    fun findSolution(initialGuess: Vector3d<Double>): Vector3d<Double>? {
+    fun findSolution(initialGuess: Vector3<Double>): Vector3<Double>? {
         var guess = initialGuess
 
         while (maxIterations-- > 0) {
             val delta = iterate(guess) ?: return null
-            val newGuess = Vector3d(
-                guess.x + delta.x, guess.y + delta.y, guess.z + delta.z
-            )
+            val newGuess = guess + delta
 
             // Solution already close enough
-            guess = newGuess
-
             if (delta.lenSq() < 1e-5) {
                 return newGuess
             }
+
+            guess = newGuess
         }
 
         return null
     }
 
-    private fun iterate(guess: Vector3d<Double>): Vector3d<Double>? {
+    private fun iterate(guess: Vector3<Double>): Vector3<Double>? {
         // Compute Jacobian
         val j11 = f1PartialX.eval(guess)
         val j12 = f1PartialY.eval(guess)
@@ -146,7 +127,7 @@ class EquationSolver(
         val f3 = -f3.eval(guess)
 
         // Multiply the inverse matrix (det * elements) and the vector -F
-        return Vector3d(
+        return Vector.of(
             detReciprocal * (inverse11 * f1 + inverse12 * f2 + inverse13 * f3),
             detReciprocal * (inverse21 * f1 + inverse22 * f2 + inverse23 * f3),
             detReciprocal * (inverse31 * f1 + inverse32 * f2 + inverse33 * f3)

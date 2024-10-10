@@ -1,11 +1,11 @@
 package de.ventolotl.lagrange
 
 import de.ventolotl.lagrange.maths.Constraint
-import de.ventolotl.lagrange.maths.Function3d
+import de.ventolotl.lagrange.maths.Function3
 import de.ventolotl.lagrange.maths.createContour
 import de.ventolotl.lagrange.ui.LagrangePane
 import de.ventolotl.lagrange.ui.mapToColors
-import de.ventolotl.lagrange.utility.Vector2d
+import de.ventolotl.lagrange.utility.Vector
 import de.ventolotl.lagrange.utility.range
 import javafx.application.Application
 import javafx.scene.Scene
@@ -29,15 +29,15 @@ class LagrangeMultipliersUI : Application() {
         val zRange = -50.0 range 200.0
         val zAccuracy = 0.1
         val areaLength = 10.0
-        val pointsRange = Vector2d(-areaLength, -areaLength) range Vector2d(areaLength, areaLength)
+        val pointsRange = Vector.of(-areaLength, -areaLength) range Vector.of(areaLength, areaLength)
         val accuracy = 100
 
-        val functionToOptimize = Function3d { x, y ->
+        val functionToOptimize = Function3 { x, y ->
             x * x + y * y
         }
 
-        val constraintEq = Function3d { x, y ->
-            x * cos(y) * y
+        val constraintEq = Function3 { x, y ->
+            x - cos(y) * y
         }
         val constraintValue = 4.0
 
@@ -55,7 +55,7 @@ class LagrangeMultipliersUI : Application() {
         ).mapToColors(colors)
 
         val renderer = LagrangePane(
-            function3d = functionToOptimize,
+            function3 = functionToOptimize,
             constraint = constraint,
             contourLines = contour,
             scalingFactor = areaLength,

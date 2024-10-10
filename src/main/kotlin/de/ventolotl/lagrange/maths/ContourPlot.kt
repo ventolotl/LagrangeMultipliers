@@ -1,13 +1,13 @@
 package de.ventolotl.lagrange.maths
 
 import de.ventolotl.lagrange.utility.Range
-import de.ventolotl.lagrange.utility.Vector2d
+import de.ventolotl.lagrange.utility.Vector2
 import de.ventolotl.lagrange.utility.Vector2dRange
 import de.ventolotl.lagrange.utility.iterate
 
-open class ContourLine(val z: Double, val points: List<Vector2d<Double>>)
+open class ContourLine(val z: Double, val points: List<Vector2<Double>>)
 
-fun Function3d.createContour(
+fun Function3.createContour(
     zRange: Range<Double>,
     zAccuracy: Double,
     pointsRange: Vector2dRange<Double>,
@@ -16,7 +16,7 @@ fun Function3d.createContour(
     val contour = mutableListOf<ContourLine>()
 
     zRange.iterate(zAccuracy) { z ->
-        val correspondingFunction = Function3d { x, y -> eval(x, y) - z }
+        val correspondingFunction = Function3 { x, y -> eval(x, y) - z }
 
         val points = correspondingFunction.findRootsNewton(pointsRange, accuracy)
         val pointsInRange = points.filter { point ->

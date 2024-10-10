@@ -1,7 +1,8 @@
 package de.ventolotl.lagrange.ui.fragments
 
 import de.ventolotl.lagrange.ui.utility.strokeLine
-import de.ventolotl.lagrange.utility.Vector2d
+import de.ventolotl.lagrange.utility.Vector
+import de.ventolotl.lagrange.utility.Vector2
 import javafx.scene.paint.Color
 import kotlin.math.roundToInt
 
@@ -25,14 +26,14 @@ class GridPane(private val scalingFactor: Double, private val showGrid: Boolean)
         drawGrid()
 
         ctx.strokeLine(
-            Vector2d(0.0, canvasHalfHeight),
-            Vector2d(canvasWidth, canvasHalfHeight),
+            Vector.of(0.0, canvasHalfHeight),
+            Vector.of(canvasWidth, canvasHalfHeight),
             color = Color.BLACK,
             lineWidth = 1.0
         )
         ctx.strokeLine(
-            Vector2d(canvasHalfWidth, 0.0),
-            Vector2d(canvasHalfWidth, canvasHeight),
+            Vector.of(canvasHalfWidth, 0.0),
+            Vector.of(canvasHalfWidth, canvasHeight),
             color = Color.BLACK,
             lineWidth = 1.0
         )
@@ -41,15 +42,15 @@ class GridPane(private val scalingFactor: Double, private val showGrid: Boolean)
     private fun drawGrid() {
         iterateAlgebraicValues { algebraicValue ->
             // Draw x-axis
-            val windowX = algebraicToWindowCoordinates(Vector2d(algebraicValue, 0.0)).x
+            val windowX = algebraicToWindowCoordinates(Vector.of(algebraicValue, 0.0)).x
             ctx.strokeLine(
-                Vector2d(windowX, 0.0), Vector2d(windowX, canvasHeight), color = Color.BLACK, lineWidth = 0.1
+                Vector.of(windowX, 0.0), Vector.of(windowX, canvasHeight), color = Color.BLACK, lineWidth = 0.1
             )
 
             // Draw y-axis
-            val windowY = algebraicToWindowCoordinates(Vector2d(0.0, algebraicValue)).y
+            val windowY = algebraicToWindowCoordinates(Vector.of(0.0, algebraicValue)).y
             ctx.strokeLine(
-                Vector2d(0.0, windowY), Vector2d(canvasWidth, windowY), color = Color.BLACK, lineWidth = 0.1
+                Vector.of(0.0, windowY), Vector.of(canvasWidth, windowY), color = Color.BLACK, lineWidth = 0.1
             )
         }
     }
@@ -58,15 +59,15 @@ class GridPane(private val scalingFactor: Double, private val showGrid: Boolean)
         repeat(2 * scalingFactor.roundToInt() + 1) { iterator(it.toDouble() - scalingFactor) }
     }
 
-    fun windowToAlgebraicCoordinates(windowCoordinates: Vector2d<Double>): Vector2d<Double> {
+    fun windowToAlgebraicCoordinates(windowCoordinates: Vector2<Double>): Vector2<Double> {
         val algebraicX = (windowCoordinates.x - canvasHalfWidth) * scalingFactor / canvasHalfWidth
         val algebraicY = (windowCoordinates.y - canvasHalfHeight) * scalingFactor / canvasHalfHeight
-        return Vector2d(algebraicX, -algebraicY)
+        return Vector.of(algebraicX, -algebraicY)
     }
 
-    fun algebraicToWindowCoordinates(algebraicCoordinates: Vector2d<Double>): Vector2d<Double> {
+    fun algebraicToWindowCoordinates(algebraicCoordinates: Vector2<Double>): Vector2<Double> {
         val windowX = (algebraicCoordinates.x * canvasHalfWidth) / scalingFactor + canvasHalfWidth
         val windowY = (-algebraicCoordinates.y * canvasHalfHeight) / scalingFactor + canvasHalfHeight
-        return Vector2d(windowX, windowY)
+        return Vector.of(windowX, windowY)
     }
 }

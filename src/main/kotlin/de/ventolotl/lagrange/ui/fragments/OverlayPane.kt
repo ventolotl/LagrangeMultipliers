@@ -4,7 +4,7 @@ import com.sun.javafx.tk.Toolkit
 import de.ventolotl.lagrange.ui.ContourLineColored
 import de.ventolotl.lagrange.ui.LagrangePane
 import de.ventolotl.lagrange.ui.utility.write
-import de.ventolotl.lagrange.utility.Vector2d
+import de.ventolotl.lagrange.utility.Vector
 import de.ventolotl.lagrange.utility.Vector2dRange
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
@@ -26,11 +26,11 @@ class OverlayPane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFr
     private val backgroundColor = Color.rgb(30, 30, 30)
 
     private val contourLines = lagrangePane.contourLines
-    private val function3d = lagrangePane.function3d
+    private val function3d = lagrangePane.function3
 
     private var relevantContours: List<ContourLineColored>? = null
 
-    private var mouseWindowPosition = Vector2d(0.0, 0.0)
+    private var mouseWindowPosition = Vector.of(0.0, 0.0)
 
     init {
         setOnMouseMoved { event ->
@@ -44,7 +44,7 @@ class OverlayPane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFr
     }
 
     private fun interactivePaint(mouseX: Double, mouseY: Double) {
-        mouseWindowPosition = Vector2d(mouseX, mouseY)
+        mouseWindowPosition = Vector.of(mouseX, mouseY)
 
         clear()
         paint()
@@ -68,7 +68,7 @@ class OverlayPane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFr
         val fontMetrics = Toolkit.getToolkit().fontLoader.getFontMetrics(functionEvalFont)
         val ascent = (height - fontMetrics.lineHeight) * 0.5 + height
 
-        val textPosition = Vector2d(
+        val textPosition = Vector.of(
             mouseWindowPosition.x + LEGEND_EVAL_OFF_X,
             mouseWindowPosition.y + ascent - LEGEND_EVAL_OFF_Y
         )
@@ -81,8 +81,8 @@ class OverlayPane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFr
         // Take some of the contours into account, rendering all 1000 contours might not be a good idea...
         if (this.relevantContours == null) {
             val windowRange = Vector2dRange(
-                0.0..canvas.width,
-                0.0..canvas.height
+                Vector.of(0.0, 0.0),
+                Vector.of(canvas.width, canvas.height)
             )
             relevantContours = this.contourLines.filter { contourLineColored ->
                 val points = contourLineColored.points
@@ -122,7 +122,7 @@ class OverlayPane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFr
         elements.withIndex().forEach { (index, element) ->
             val textY = LEGEND_Y_POS + rectSize + maxTextHeight * index
 
-            ctx.write(texts[index], Vector2d(LEGEND_X_POS, textY), Color.WHITE, contourOverlayFont)
+            ctx.write(texts[index], Vector.of(LEGEND_X_POS, textY), Color.WHITE, contourOverlayFont)
 
             ctx.fill = element.second
             ctx.fillRect(rectX, textY - rectSize, rectSize, rectSize)

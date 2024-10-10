@@ -1,23 +1,23 @@
 package de.ventolotl.lagrange.ui.utility
 
 import de.ventolotl.lagrange.ui.fragments.GridPane
-import de.ventolotl.lagrange.utility.Vector2d
+import de.ventolotl.lagrange.utility.Vector2
 import de.ventolotl.lagrange.utility.distSq
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 
 internal object FunctionRenderer {
     fun computeAlgebraicConnections(
-        algebraicCoordinates: List<Vector2d<Double>>, distToConnect: Double
-    ): List<Pair<Vector2d<Double>, Vector2d<Double>>> {
+        algebraicCoordinates: List<Vector2<Double>>, distToConnect: Double
+    ): List<Pair<Vector2<Double>, Vector2<Double>>> {
         val distToConnectSq = distToConnect * distToConnect
         val remainingAlgebraicCoords = algebraicCoordinates.toMutableList()
 
         val first = remainingAlgebraicCoords.firstOrNull() ?: return emptyList()
         var lastPoint = first
 
-        val connections = mutableListOf<Pair<Vector2d<Double>, Vector2d<Double>>>()
-        val jumps = mutableListOf<Vector2d<Double>>()
+        val connections = mutableListOf<Pair<Vector2<Double>, Vector2<Double>>>()
+        val jumps = mutableListOf<Vector2<Double>>()
 
         while (remainingAlgebraicCoords.isNotEmpty()) {
             val nearest = remainingAlgebraicCoords.minBy { point ->
@@ -53,7 +53,7 @@ internal object FunctionRenderer {
     fun renderGraph(
         grid: GridPane,
         ctx: GraphicsContext,
-        algebraicConnections: List<Pair<Vector2d<Double>, Vector2d<Double>>>,
+        algebraicConnections: List<Pair<Vector2<Double>, Vector2<Double>>>,
         color: Color,
         width: Double = 20.0
     ) {

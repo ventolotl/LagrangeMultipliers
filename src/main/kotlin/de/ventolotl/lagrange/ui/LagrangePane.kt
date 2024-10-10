@@ -1,14 +1,14 @@
 package de.ventolotl.lagrange.ui
 
 import de.ventolotl.lagrange.maths.Constraint
-import de.ventolotl.lagrange.maths.Function3d
+import de.ventolotl.lagrange.maths.Function3
 import de.ventolotl.lagrange.ui.fragments.*
 import javafx.animation.PauseTransition
 import javafx.scene.layout.StackPane
 import javafx.util.Duration
 
 class LagrangePane(
-    val function3d: Function3d,
+    val function3: Function3,
     val constraint: Constraint,
     val contourLines: List<ContourLineColored>,
     scalingFactor: Double,

@@ -2,10 +2,10 @@ package de.ventolotl.lagrange.ui.fragments
 
 import de.ventolotl.lagrange.maths.optimize
 import de.ventolotl.lagrange.ui.LagrangePane
-import de.ventolotl.lagrange.ui.utility.fillOval
 import de.ventolotl.lagrange.ui.utility.FunctionRenderer
+import de.ventolotl.lagrange.ui.utility.fillOval
 import de.ventolotl.lagrange.ui.utility.write
-import de.ventolotl.lagrange.utility.Vector2d
+import de.ventolotl.lagrange.utility.Vector2
 import de.ventolotl.lagrange.utility.distSq
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
@@ -16,7 +16,7 @@ private const val DIST_TO_CONNECT = 0.5
 class ContourPane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFragment() {
     private val contourFont = Font.font("Arial", 15.0)
 
-    private val function3d = lagrangePane.function3d
+    private val function3d = lagrangePane.function3
     private val constraint = lagrangePane.constraint
 
     private val solutions = function3d.optimize(constraint.rootFunction, constraint.range, 0.05)
@@ -48,7 +48,7 @@ class ContourPane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFr
         }
 
         // Write the coordinates of the solution
-        val visualizedSolutions = mutableListOf<Vector2d<Double>>()
+        val visualizedSolutions = mutableListOf<Vector2<Double>>()
         solutions.forEach { solution ->
             val solutionNearby = visualizedSolutions.any { other ->
                 other.distSq(solution) < 0.01

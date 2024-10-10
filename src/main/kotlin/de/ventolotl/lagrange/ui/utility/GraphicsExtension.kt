@@ -1,12 +1,12 @@
 package de.ventolotl.lagrange.ui.utility
 
-import de.ventolotl.lagrange.utility.Vector2d
+import de.ventolotl.lagrange.utility.Vector2
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 import kotlin.math.hypot
 
 internal fun GraphicsContext.strokeLine(
-    start: Vector2d<Double>, end: Vector2d<Double>, color: Color? = null, lineWidth: Double = 10.0
+    start: Vector2<Double>, end: Vector2<Double>, color: Color? = null, lineWidth: Double = 10.0
 ) {
     color?.let { this.stroke = it }
     this.lineWidth = lineWidth
@@ -14,7 +14,7 @@ internal fun GraphicsContext.strokeLine(
 }
 
 internal fun GraphicsContext.fillOval(
-    point: Vector2d<Double>, radius: Double, color: Color? = null
+    point: Vector2<Double>, radius: Double, color: Color? = null
 ) {
     val semiradius = radius / 2.0
     color?.let { this.fill = it }
@@ -22,7 +22,7 @@ internal fun GraphicsContext.fillOval(
 }
 
 internal fun GraphicsContext.write(
-    text: String, point: Vector2d<Double>, color: Color? = null, font: javafx.scene.text.Font? = null
+    text: String, point: Vector2<Double>, color: Color? = null, font: javafx.scene.text.Font? = null
 ) {
     color?.let { this.fill = it }
     font?.let { this.font = it }
@@ -31,7 +31,7 @@ internal fun GraphicsContext.write(
 
 // from https://stackoverflow.com/questions/2027613/how-to-draw-a-directed-arrow-line-in-java
 fun GraphicsContext.drawArrowLine(
-    start: Vector2d<Double>, vec: Vector2d<Double>, d: Double, h: Double, color: Color
+    start: Vector2<Double>, vec: Vector2<Double>, d: Double, h: Double, color: Color
 ) {
     val x1 = start.x
     val y1 = start.y

@@ -1,18 +1,20 @@
 package de.ventolotl.lagrange.ui.fragments
 
-import de.ventolotl.lagrange.maths.Function3d
+import de.ventolotl.lagrange.maths.Function3
 import de.ventolotl.lagrange.maths.optimize
 import de.ventolotl.lagrange.ui.LagrangePane
 import de.ventolotl.lagrange.ui.utility.drawArrowLine
 import de.ventolotl.lagrange.ui.utility.fillOval
-import de.ventolotl.lagrange.utility.Vector2d
+import de.ventolotl.lagrange.utility.Vector
+import de.ventolotl.lagrange.utility.Vector2
 import de.ventolotl.lagrange.utility.distSq
+import de.ventolotl.lagrange.utility.plus
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
 import kotlin.math.abs
 
 class InteractivePane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFragment() {
-    private val function3d = lagrangePane.function3d
+    private val function3d = lagrangePane.function3
     private val constraint = lagrangePane.constraint
 
     private val gradientOptimizeFunc = function3d.gradient()
@@ -57,7 +59,7 @@ class InteractivePane(lagrangePane: LagrangePane, private val grid: GridPane) : 
     }
 
     private fun createGradients(mouseX: Double, mouseY: Double) {
-        val mousePoint = Vector2d(mouseX, mouseY)
+        val mousePoint = Vector.of(mouseX, mouseY)
         val algebraicMousePoint = grid.windowToAlgebraicCoordinates(mousePoint)
 
         val optimizeFunctionGradient = createGradientOptimizeFunction(algebraicMousePoint)
@@ -66,21 +68,17 @@ class InteractivePane(lagrangePane: LagrangePane, private val grid: GridPane) : 
         renderData = RenderData(optimizeFunctionGradient, constraintFunctionGradient)
     }
 
-    private fun createGradientOptimizeFunction(algebraicMousePoint: Vector2d<Double>): GradientData {
+    private fun createGradientOptimizeFunction(algebraicMousePoint: Vector2<Double>): GradientData {
         val zValue = function3d.eval(algebraicMousePoint)
         val color = contourLines.minBy { line -> abs(line.z - zValue) }.color
 
         return createGradientFunction(algebraicMousePoint, gradientOptimizeFunc, color.darker())
     }
 
-    private fun createGradientConstraintFunction(algebraicMousePoint: Vector2d<Double>): GradientData? {
-        val distFunction = Function3d { x, y ->
-            val deltaX = x - algebraicMousePoint.x
-            val deltaY = y - algebraicMousePoint.y
-            deltaX * deltaX + deltaY * deltaY
-        }
+    private fun createGradientConstraintFunction(algebraicMousePoint: Vector2<Double>): GradientData? {
+        val distFunction = Function3 { x, y -> Vector.of(x, y).distSq(algebraicMousePoint) }
         val closestPoint = distFunction.optimize(
-            constraint.rootFunction, constraint.range, 1.0, 4000, 0.5
+            constraint.rootFunction, constraint.range, 1.0, 4000
         ).minByOrNull { point ->
             point.distSq(algebraicMousePoint)
         } ?: return null
@@ -92,15 +90,12 @@ class InteractivePane(lagrangePane: LagrangePane, private val grid: GridPane) : 
     }
 
     private fun createGradientFunction(
-        nearestPoint: Vector2d<Double>, gradientFunc: Vector2d<Function3d>, color: Color
+        nearestPoint: Vector2<Double>, gradientFunc: Vector2<Function3>, color: Color
     ): GradientData {
-        val nearestX = nearestPoint.x
-        val nearestY = nearestPoint.y
-
-        val gradient = Vector2d(
-            gradientFunc.x.eval(nearestX, nearestY), gradientFunc.y.eval(nearestX, nearestY)
+        val gradient = Vector.of(
+            gradientFunc.x.eval(nearestPoint), gradientFunc.y.eval(nearestPoint)
         )
-        val adjustedGradient = Vector2d(gradient.x + nearestX, gradient.y + nearestY)
+        val adjustedGradient = gradient + nearestPoint
 
         return GradientData(
             grid.algebraicToWindowCoordinates(nearestPoint),
@@ -115,5 +110,5 @@ private data class RenderData(
 )
 
 private data class GradientData(
-    val point: Vector2d<Double>, val vector: Vector2d<Double>, val color: Color
+    val point: Vector2<Double>, val vector: Vector2<Double>, val color: Color
 )

@@ -1,7 +1,8 @@
 package de.ventolotl.lagrange.maths
 
-import de.ventolotl.lagrange.utility.Vector2d
-import de.ventolotl.lagrange.utility.Vector3d
+import de.ventolotl.lagrange.utility.Vector
+import de.ventolotl.lagrange.utility.Vector2
+import de.ventolotl.lagrange.utility.Vector3
 
 const val EPSILON = 1e-5
 
@@ -17,11 +18,11 @@ fun interface Function2d {
     }
 }
 
-fun interface Function3d {
+fun interface Function3 {
     fun eval(x: Double, y: Double): Double
 
-    fun eval(vector2d: Vector2d<Double>): Double {
-        return eval(vector2d.x, vector2d.y)
+    fun eval(vector2: Vector2<Double>): Double {
+        return eval(vector2.x, vector2.y)
     }
 
     fun evalX(x: Double): Function2d {
@@ -32,44 +33,44 @@ fun interface Function3d {
         return Function2d { x -> eval(x, y) }
     }
 
-    fun partialX(): Function3d {
-        return Function3d { x, y ->
+    fun partialX(): Function3 {
+        return Function3 { x, y ->
             val df = eval(x + EPSILON, y) - eval(x, y)
             val dx = EPSILON
             df / dx
         }
     }
 
-    fun partialY(): Function3d {
-        return Function3d { x, y ->
+    fun partialY(): Function3 {
+        return Function3 { x, y ->
             val df = eval(x, y + EPSILON) - eval(x, y)
             val dy = EPSILON
             df / dy
         }
     }
 
-    fun gradient(): Vector2d<Function3d> {
-        return Vector2d(partialX(), partialY())
+    fun gradient(): Vector2<Function3> {
+        return Vector.of(partialX(), partialY())
     }
 }
 
 fun interface Function4d {
     fun eval(x: Double, y: Double, z: Double): Double
 
-    fun eval(vector3d: Vector3d<Double>): Double {
-        return eval(vector3d.x, vector3d.y, vector3d.z)
+    fun eval(vector3: Vector3<Double>): Double {
+        return eval(vector3.x, vector3.y, vector3.z)
     }
 
-    fun evalX(x: Double): Function3d {
-        return Function3d { y, z -> eval(x, y, z) }
+    fun evalX(x: Double): Function3 {
+        return Function3 { y, z -> eval(x, y, z) }
     }
 
-    fun evalY(y: Double): Function3d {
-        return Function3d { x, z -> eval(x, y, z) }
+    fun evalY(y: Double): Function3 {
+        return Function3 { x, z -> eval(x, y, z) }
     }
 
-    fun evalZ(z: Double): Function3d {
-        return Function3d { x, y -> eval(x, y, z) }
+    fun evalZ(z: Double): Function3 {
+        return Function3 { x, y -> eval(x, y, z) }
     }
 
     fun partialX(): Function4d {
@@ -96,7 +97,7 @@ fun interface Function4d {
         }
     }
 
-    fun gradient(): Vector3d<Function4d> {
-        return Vector3d(partialX(), partialY(), partialZ())
+    fun gradient(): Vector3<Function4d> {
+        return Vector.of(partialX(), partialY(), partialZ())
     }
 }
