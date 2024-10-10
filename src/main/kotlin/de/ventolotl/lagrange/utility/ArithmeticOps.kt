@@ -1,10 +1,10 @@
 package de.ventolotl.lagrange.utility
 
 val operations = mapOf(
-    Int::class to intOperations(),
-    Long::class to longOperations(),
-    Double::class to doubleOperations(),
-    Float::class to floatOperations(),
+    Int::class to IntOps,
+    Long::class to LongOps,
+    Double::class to DoubleOps,
+    Float::class to FloatOps,
 )
 
 inline fun <reified T> operationForType(): OperationalType<T> {
@@ -37,28 +37,28 @@ val notImplementedOperations = object : OperationalType<Any?> {
     }
 }
 
-private fun intOperations() = object : OperationalType<Int> {
+private object IntOps : OperationalType<Int> {
     override fun add(a: Int, b: Int): Int = a + b
     override fun subtract(a: Int, b: Int): Int = a - b
     override fun multiply(a: Int, b: Int): Int = a * b
     override fun divide(a: Int, b: Int): Int = a / b
 }
 
-private fun longOperations() = object : OperationalType<Long> {
+private object LongOps : OperationalType<Long> {
     override fun add(a: Long, b: Long): Long = a + b
     override fun subtract(a: Long, b: Long): Long = a - b
     override fun multiply(a: Long, b: Long): Long = a * b
     override fun divide(a: Long, b: Long): Long = a / b
 }
 
-private fun doubleOperations() = object : OperationalType<Double> {
+private object DoubleOps : OperationalType<Double> {
     override fun add(a: Double, b: Double): Double = a + b
     override fun subtract(a: Double, b: Double): Double = a - b
     override fun multiply(a: Double, b: Double): Double = a * b
     override fun divide(a: Double, b: Double): Double = a / b
 }
 
-private fun floatOperations() = object : OperationalType<Float> {
+private object FloatOps : OperationalType<Float> {
     override fun add(a: Float, b: Float): Float = a + b
     override fun subtract(a: Float, b: Float): Float = a - b
     override fun multiply(a: Float, b: Float): Float = a * b
