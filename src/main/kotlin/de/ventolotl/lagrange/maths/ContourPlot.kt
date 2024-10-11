@@ -5,7 +5,7 @@ import de.ventolotl.lagrange.utility.Vector2
 import de.ventolotl.lagrange.utility.Vector2dRange
 import de.ventolotl.lagrange.utility.iterate
 
-open class ContourLine(val z: Double, val points: List<Vector2<Double>>)
+data class ContourLine(val z: Double, val points: List<Vector2<Double>>)
 
 fun Function3.createContour(
     zRange: Range<Double>,
@@ -14,6 +14,10 @@ fun Function3.createContour(
     accuracy: Int
 ): List<ContourLine> {
     val contour = mutableListOf<ContourLine>()
+
+    if (zAccuracy < 0.0) {
+        error("Error creating contour: zAccuracy must be positive ($zAccuracy)")
+    }
 
     zRange.iterate(zAccuracy) { z ->
         val correspondingFunction = Function3 { x, y -> eval(x, y) - z }

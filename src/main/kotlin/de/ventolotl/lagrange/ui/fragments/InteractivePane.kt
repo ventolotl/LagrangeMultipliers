@@ -70,7 +70,7 @@ class InteractivePane(lagrangePane: LagrangePane, private val grid: GridPane) : 
 
     private fun createGradientOptimizeFunction(algebraicMousePoint: Vector2<Double>): GradientData {
         val zValue = function3d.eval(algebraicMousePoint)
-        val color = contourLines.minBy { line -> abs(line.z - zValue) }.color
+        val color = contourLines.minBy { lineColored -> abs(lineColored.line.z - zValue) }.color
 
         return createGradientFunction(algebraicMousePoint, gradientOptimizeFunc, color.darker())
     }

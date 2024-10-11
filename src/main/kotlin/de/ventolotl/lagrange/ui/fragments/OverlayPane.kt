@@ -85,7 +85,7 @@ class OverlayPane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFr
                 Vector.of(canvas.width, canvas.height)
             )
             relevantContours = this.contourLines.filter { contourLineColored ->
-                val points = contourLineColored.points
+                val points = contourLineColored.line.points
                 points.map(grid::algebraicToWindowCoordinates)
                     .any { point -> point in windowRange }
             }
@@ -93,8 +93,11 @@ class OverlayPane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFr
         }
 
         val elements = relevantContours.indices
-            .filter { it % (contourLines.indices.last / LEGEND_LENGTH) == 0 }
-            .map { contourLines[it].z.toInt() to contourLines[it].color }
+            .filter {
+                relevantContours.size - 1 < LEGEND_LENGTH
+                        || it % (contourLines.indices.last / LEGEND_LENGTH) == 0
+            }
+            .map { contourLines[it].line.z.toInt() to contourLines[it].color }
 
         // Create the texts
         val texts = elements.map { (zValue, _) -> "z=$zValue" }
