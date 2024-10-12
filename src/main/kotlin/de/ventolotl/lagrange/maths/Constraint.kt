@@ -8,7 +8,7 @@ data class Constraint(
     private val equation: Function3,
     val constant: Double,
     val range: Vector2dRange<Double>,
-    val accuracy: Int,
+    val accuracy: Int = 100,
     val color: Color = Color.RED
 ) {
     val rootFunction = Function3 { x, y ->

@@ -1,11 +1,27 @@
 package de.ventolotl.lagrange.maths
 
-import de.ventolotl.lagrange.utility.Range
-import de.ventolotl.lagrange.utility.Vector2
-import de.ventolotl.lagrange.utility.Vector2dRange
-import de.ventolotl.lagrange.utility.iterate
+import de.ventolotl.lagrange.utility.*
+import kotlin.math.min
 
 data class ContourLine(val z: Double, val points: List<Vector2<Double>>)
+
+fun Function3.createContour(
+    contourLinesN: Int,
+    pointsRange: Vector2dRange<Double>,
+    accuracy: Int = 100
+): List<ContourLine> {
+    val valuesF = mutableListOf<Double>().apply {
+        val iterationStep = 0.01 * min(pointsRange.rangeX.length, pointsRange.rangeY.length)
+        pointsRange.iterate(iterationStep) { x, y ->
+            this.add(this@createContour.eval(x, y))
+        }
+    }
+
+    val zRange = valuesF.min() range valuesF.max()
+    val zAccuracy = zRange.length / contourLinesN
+
+    return createContour(zRange, zAccuracy, pointsRange, accuracy)
+}
 
 fun Function3.createContour(
     zRange: Range<Double>,

@@ -9,7 +9,6 @@ import de.ventolotl.lagrange.utility.Vector
 import de.ventolotl.lagrange.utility.range
 import javafx.application.Application
 import javafx.scene.Scene
-import javafx.scene.paint.Color
 import javafx.stage.Stage
 import kotlin.math.cos
 
@@ -21,21 +20,13 @@ fun main() {
 }
 
 class LagrangeMultipliersUI : Application() {
-    private val colors = (0..<255 step 10).map {
-        Color.rgb(it / 8, 255 - it, it)
-    }.toTypedArray()
-
     override fun start(stage: Stage) {
-        val zRange = -50.0 range 200.0
-        val zAccuracy = 0.1
         val areaLength = 10.0
         val pointsRange = Vector.of(-areaLength, -areaLength) range Vector.of(areaLength, areaLength)
-        val accuracy = 100
 
         val functionToOptimize = Function3 { x, y ->
             x * x + y * y
         }
-
         val constraintEq = Function3 { x, y ->
             x - cos(y) * y
         }
@@ -44,20 +35,20 @@ class LagrangeMultipliersUI : Application() {
         val constraint = Constraint(
             equation = constraintEq,
             constant = constraintValue,
-            range = pointsRange,
-            accuracy = accuracy
+            range = pointsRange
         )
-        val contour = functionToOptimize.createContour(
-            zRange = zRange,
-            zAccuracy = zAccuracy,
-            pointsRange = pointsRange,
-            accuracy = accuracy
-        ).mapToColors(colors)
+        val contourLines = functionToOptimize.createContour(
+            contourLinesN = 10,
+            pointsRange = pointsRange
+        )
+        val coloredContourLines = contourLines.mapToColors(
+            ColorSet.createColorSet(size = contourLines.size).toTypedArray()
+        )
 
         val renderer = LagrangePane(
             function3 = functionToOptimize,
             constraint = constraint,
-            contourLines = contour,
+            contourLines = coloredContourLines,
             scalingFactor = areaLength,
             showGrid = true
         )

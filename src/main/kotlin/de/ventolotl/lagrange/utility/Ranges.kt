@@ -27,6 +27,11 @@ inline fun <reified T> Range<T>.iterate(step: T, iteration: (value: T) -> Unit)
     }
 }
 
+inline val <reified T> Range<T>.length: T
+        where T : Comparable<T>,
+              T : Number
+    get() = operationForType<T>().subtract(this.end, this.start)
+
 data class Vector2dRange<T : Comparable<T>>(private val start0: Vector2<T>, private val end0: Vector2<T>) {
     val startX = if (start0.x < end0.x) start0.x else end0.x
     val endX = if (start0.x > end0.x) start0.x else end0.x

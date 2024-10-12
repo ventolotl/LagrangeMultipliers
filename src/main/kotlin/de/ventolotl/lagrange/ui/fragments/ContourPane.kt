@@ -2,13 +2,13 @@ package de.ventolotl.lagrange.ui.fragments
 
 import de.ventolotl.lagrange.maths.optimize
 import de.ventolotl.lagrange.ui.LagrangePane
+import de.ventolotl.lagrange.ui.utility.ColorInterpolator
 import de.ventolotl.lagrange.ui.utility.FunctionRenderer
 import de.ventolotl.lagrange.ui.utility.fillOval
 import de.ventolotl.lagrange.ui.utility.write
 import de.ventolotl.lagrange.utility.*
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
-import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.max
 
@@ -46,34 +46,12 @@ class ContourPane(private val lagrangePane: LagrangePane, private val grid: Grid
                 val algebraicCoords = grid.windowToAlgebraicCoordinates(windowCoordinates)
                 val z = function3d.eval(algebraicCoords)
 
-                // This requires the contourLines to be indexed in ascending order (according to z)
-                // The correct ordering is ensured when creating the ContourPlot
-                val contourBelow = lagrangePane.contourLines.lastOrNull { otherColoredLevel ->
-                    otherColoredLevel.line.z < z
-                }
-                val contourAbove = lagrangePane.contourLines.firstOrNull { otherColoredLevel ->
-                    otherColoredLevel.line.z >= z
-                }
-
-                if (contourBelow == null && contourAbove == null) {
-                    // Nothing to paint
-                    return
-                }
-
-                val color = when {
-                    contourBelow == null -> contourAbove!!.color
-                    contourAbove == null -> contourBelow.color
-                    else -> {
-                        val zAbove = contourAbove.line.z
-                        val zBelow = contourBelow.line.z
-
-                        val contourAboveColor = contourAbove.color.toVec()
-                        val contourBelowColor = contourBelow.color.toVec()
-
-                        val coefficient = abs(z - zBelow) / abs(zBelow - zAbove)
-                        (coefficient * contourAboveColor + (1.0 - coefficient) * contourBelowColor).toColor()
-                    }
-                }
+                val color = ColorInterpolator.linearGradient(
+                    lagrangePane.contourLines,
+                    value = { coloredLine -> coloredLine.line.z },
+                    color = { coloredLine -> coloredLine.color },
+                    i = z
+                )
 
                 ctx.fill = color
                 ctx.fillRect(px.toDouble(), py.toDouble(), step.toDouble(), step.toDouble())
@@ -81,16 +59,8 @@ class ContourPane(private val lagrangePane: LagrangePane, private val grid: Grid
         }
 
         contourConnections.forEach { (contour, connections) ->
-          // FunctionRenderer.renderGraph(grid, ctx, connections, Color.BLACK, width * 0.1)
+           //FunctionRenderer.renderGraph(grid, ctx, connections, Color.BLACK, width * 0.1)
         }
-    }
-
-    private fun Vector3<Double>.toColor(): Color {
-        return Color.rgb(x.toInt(), y.toInt(), z.toInt())
-    }
-
-    private fun Color.toVec(): Vector3<Double> {
-        return 255.0 * Vector.of(red, green, blue)
     }
 
     private fun paintSolutions() {
