@@ -1,7 +1,6 @@
 package de.ventolotl.lagrange.ui.fragments
 
 import com.sun.javafx.tk.Toolkit
-import de.ventolotl.lagrange.ui.ContourLineColored
 import de.ventolotl.lagrange.ui.LagrangePane
 import de.ventolotl.lagrange.ui.utility.write
 import de.ventolotl.lagrange.utility.Vector
@@ -15,7 +14,7 @@ private const val LEGEND_Y_POS = 40.0
 private const val LEGEND_BORDER_SIZE = 10.0
 private const val LEGEND_RECT_SPACING_SIZE = 20.0
 private const val LEGEND_RECT_SIZE_PCT = 0.8
-private const val LEGEND_LENGTH = 4
+private const val LEGEND_LENGTH = 10
 private const val LEGEND_EVAL_OFF_X = 50
 private const val LEGEND_EVAL_OFF_Y = 50
 
@@ -27,8 +26,6 @@ class OverlayPane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFr
 
     private val contourLines = lagrangePane.contourLines
     private val function3d = lagrangePane.function3
-
-    private var relevantContours: List<ContourLineColored>? = null
 
     private var mouseWindowPosition = Vector.of(0.0, 0.0)
 
@@ -76,21 +73,7 @@ class OverlayPane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFr
     }
 
     private fun paintHeightsOverlay() {
-        var relevantContours = this.relevantContours ?: mutableListOf()
-
-        // Take some of the contours into account, rendering all 1000 contours might not be a good idea...
-        if (this.relevantContours == null) {
-            val windowRange = Vector2dRange(
-                Vector.of(0.0, 0.0),
-                Vector.of(canvas.width, canvas.height)
-            )
-            relevantContours = this.contourLines.filter { contourLineColored ->
-                val points = contourLineColored.line.points
-                points.map(grid::algebraicToWindowCoordinates)
-                    .any { point -> point in windowRange }
-            }
-            this.relevantContours = relevantContours
-        }
+        val relevantContours = this.contourLines
 
         val elements = relevantContours.indices
             .filter {
@@ -112,6 +95,16 @@ class OverlayPane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFr
         // Calculate total width and height
         val width = LEGEND_BORDER_SIZE + maxTextWidth + LEGEND_RECT_SPACING_SIZE + rectSize + LEGEND_BORDER_SIZE
         val height = LEGEND_BORDER_SIZE + rectSize + maxTextHeight * (texts.size - 1) + LEGEND_BORDER_SIZE
+
+        // Check if the cursor is not within the bounds of the overlay
+        val overlayBounds = Vector2dRange(
+            start0 = Vector.of(LEGEND_X_POS - LEGEND_BORDER_SIZE, LEGEND_Y_POS - LEGEND_BORDER_SIZE),
+            end0 = Vector.of(LEGEND_X_POS - LEGEND_BORDER_SIZE + width, LEGEND_Y_POS - LEGEND_BORDER_SIZE + height)
+        )
+
+        if (mouseWindowPosition in overlayBounds) {
+            return
+        }
 
         // Draw rect
         ctx.fill = backgroundColor
