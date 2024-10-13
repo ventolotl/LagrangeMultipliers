@@ -1,6 +1,7 @@
 package de.ventolotl.lagrange.test
 
 import de.ventolotl.lagrange.utility.Vector
+import de.ventolotl.lagrange.utility.minus
 import de.ventolotl.lagrange.utility.plus
 import de.ventolotl.lagrange.utility.times
 import org.junit.Assert
@@ -22,7 +23,7 @@ class VectorOpsTest {
         val vec2 = Vector.of(3, 5)
 
         val expected = Vector.of(-2, -4)
-        Assert.assertEquals(expected, vec1 + vec2)
+        Assert.assertEquals(expected, vec1 - vec2)
     }
 
     @Test
@@ -31,17 +32,17 @@ class VectorOpsTest {
         val vec2 = Vector.of(3, 5)
 
         val expected = Vector.of(9, 10)
-        Assert.assertEquals(expected, vec1 + vec2)
+        Assert.assertEquals(expected, vec1 * vec2)
     }
 
-   @Test
-   fun testScalarMul() {
-       val scalar = 2
-       val vec = Vector.of(10, 5)
+    @Test
+    fun testScalarMul() {
+        val scalar = 2
+        val vec = Vector.of(10, 5)
 
-       val expected = Vector.of(20, 10)
-       Assert.assertEquals(expected, scalar * vec)
-   }
+        val expected = Vector.of(20, 10)
+        Assert.assertEquals(expected, scalar * vec)
+    }
 
     @Test
     fun testOpNotImplemented() {
