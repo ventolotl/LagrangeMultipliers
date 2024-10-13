@@ -64,12 +64,9 @@ fun Function2d.findRootNewton(guess: Double): Double? {
 // We apply the intermediate value theorem to isolate possible roots of our single-valued function
 private fun Function2d.approximatedRoots(range: Range<Double>, accuracy: Int = 100): List<Double> {
     val approximatedRoots = mutableListOf<Double>()
-
-    val totalRange = range.end - range.start
-    val stepSize = totalRange / accuracy.toDouble()
-
     var lastSign = this.eval(range.start) > 0
 
+    val stepSize = range.length / accuracy.toDouble()
     range.iterate(stepSize) { x ->
         val currentSign = this.eval(x) > 0
 
