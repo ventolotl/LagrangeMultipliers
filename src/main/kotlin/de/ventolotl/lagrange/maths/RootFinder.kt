@@ -3,16 +3,14 @@ package de.ventolotl.lagrange.maths
 import de.ventolotl.lagrange.utility.*
 import kotlin.math.abs
 
-// Error reduces ^2 each iteration, so 50 should be enough
+// Error reduces ~^2 each iteration, so 50 should be enough
 private const val NEWTON_ITERATIONS = 50
 
 fun Function3.findRootsNewton(range: Vector2dRange<Double>, accuracy: Int = 100): List<Vector2<Double>> {
     val roots = mutableListOf<Vector2<Double>>()
 
-    // Fix x in order to project 2-valued function to single-valued function
-    val totalRangeX = range.endX - range.startX
-    val stepSizeX = totalRangeX / accuracy.toDouble()
-
+    // Fix x to project 2-valued function to single-valued function
+    val stepSizeX = range.rangeX.length / accuracy.toDouble()
     range.rangeX.iterate(stepSizeX) { fixedX ->
         val projectedY = this.evalX(fixedX)
         projectedY.findRootsNewton(range.rangeY, accuracy).forEach { rootY ->
@@ -20,10 +18,8 @@ fun Function3.findRootsNewton(range: Vector2dRange<Double>, accuracy: Int = 100)
         }
     }
 
-    // Fix y in order to project 2-valued function to single-valued function
-    val totalRangeY = range.endY - range.startY
-    val stepSizeY = totalRangeY / accuracy.toDouble()
-
+    // Fix y to project 2-valued function to single-valued function
+    val stepSizeY = range.rangeY.length / accuracy.toDouble()
     range.rangeY.iterate(stepSizeY) { fixedY ->
         val projectedX = this.evalY(fixedY)
         projectedX.findRootsNewton(range.rangeX, accuracy).forEach { rootX ->
