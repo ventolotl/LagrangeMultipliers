@@ -3,6 +3,7 @@ package de.ventolotl.lagrange.ui.fragments
 import de.ventolotl.lagrange.maths.Function3
 import de.ventolotl.lagrange.maths.optimize
 import de.ventolotl.lagrange.ui.LagrangePane
+import de.ventolotl.lagrange.ui.utility.ColorInterpolator
 import de.ventolotl.lagrange.ui.utility.drawArrowLine
 import de.ventolotl.lagrange.ui.utility.fillOval
 import de.ventolotl.lagrange.utility.Vector
@@ -11,7 +12,6 @@ import de.ventolotl.lagrange.utility.distSq
 import de.ventolotl.lagrange.utility.plus
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.paint.Color
-import kotlin.math.abs
 
 class InteractivePane(lagrangePane: LagrangePane, private val grid: GridPane) : UIFragment() {
     private val function3d = lagrangePane.function3
@@ -70,8 +70,12 @@ class InteractivePane(lagrangePane: LagrangePane, private val grid: GridPane) : 
 
     private fun createGradientOptimizeFunction(algebraicMousePoint: Vector2<Double>): GradientData {
         val zValue = function3d.eval(algebraicMousePoint)
-        val color = contourLines.minBy { lineColored -> abs(lineColored.line.z - zValue) }.color
-
+        val color = ColorInterpolator.linearGradient(
+            contourLines,
+            value = { coloredLine -> coloredLine.line.z },
+            color = { coloredLine -> coloredLine.colorVec },
+            i = zValue
+        )
         return createGradientFunction(algebraicMousePoint, gradientOptimizeFunc, color.darker())
     }
 
