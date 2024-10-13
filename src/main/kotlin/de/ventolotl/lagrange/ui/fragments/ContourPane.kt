@@ -6,7 +6,9 @@ import de.ventolotl.lagrange.ui.utility.ColorInterpolator
 import de.ventolotl.lagrange.ui.utility.FunctionRenderer
 import de.ventolotl.lagrange.ui.utility.fillOval
 import de.ventolotl.lagrange.ui.utility.write
-import de.ventolotl.lagrange.utility.*
+import de.ventolotl.lagrange.utility.Vector
+import de.ventolotl.lagrange.utility.Vector2
+import de.ventolotl.lagrange.utility.distSq
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import kotlin.math.ceil
@@ -29,7 +31,6 @@ class ContourPane(private val lagrangePane: LagrangePane, private val grid: Grid
 
     override fun paint() {
         drawContour()
-
         FunctionRenderer.renderGraph(grid, ctx, constraintConnections, constraint.color, 4.0)
 
         paintSolutions()
@@ -49,7 +50,7 @@ class ContourPane(private val lagrangePane: LagrangePane, private val grid: Grid
                 val color = ColorInterpolator.linearGradient(
                     lagrangePane.contourLines,
                     value = { coloredLine -> coloredLine.line.z },
-                    color = { coloredLine -> coloredLine.color },
+                    color = { coloredLine -> coloredLine.colorVec },
                     i = z
                 )
 
@@ -59,7 +60,7 @@ class ContourPane(private val lagrangePane: LagrangePane, private val grid: Grid
         }
 
         contourConnections.forEach { (contour, connections) ->
-           //FunctionRenderer.renderGraph(grid, ctx, connections, Color.BLACK, width * 0.1)
+            //FunctionRenderer.renderGraph(grid, ctx, connections, Color.BLACK, width * 0.1)
         }
     }
 

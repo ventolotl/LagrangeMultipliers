@@ -1,6 +1,7 @@
 package de.ventolotl.lagrange
 
 import de.ventolotl.lagrange.ui.utility.ColorInterpolator
+import de.ventolotl.lagrange.ui.utility.ColorInterpolator.toVec
 import javafx.scene.paint.Color
 
 object ColorSet {
@@ -17,7 +18,7 @@ object ColorSet {
             ColorInterpolator.linearGradient(
                 interpolations,
                 value = { (v, _) -> v },
-                color = { (_, c) -> c },
+                color = { (_, c) -> c.toVec() },
                 i = iteration.toDouble() / (size - 1)
             )
         }

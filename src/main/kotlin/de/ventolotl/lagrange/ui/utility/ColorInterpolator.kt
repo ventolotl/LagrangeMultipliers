@@ -11,15 +11,12 @@ object ColorInterpolator {
     inline fun <T> linearGradient(
         interpolations: List<T>,
         value: (T) -> Double,
-        color: (T) -> Color,
+        color: (T) -> Vector3<Double>,
         i: Double
     ): Color {
-        val below = interpolations.lastOrNull { element ->
-            value(element) < i
-        }
-        val above = interpolations.firstOrNull { element ->
-            value(element) >= i
-        }
+        val belowIndex = interpolations.binarySearchForBounds(i) { value(it) }
+        val below = interpolations.getOrNull(belowIndex)
+        val above = interpolations.getOrNull(belowIndex + 1)
 
         if (below == null && above == null) {
             error("There should be at least one below or above")
@@ -32,13 +29,42 @@ object ColorInterpolator {
                 val vAbove = value(above)
                 val vBelow = value(below)
 
-                val contourAboveColor = color(above).toVec()
-                val contourBelowColor = color(below).toVec()
+                val contourAboveColor = color(above)
+                val contourBelowColor = color(below)
 
                 val coefficient = abs(i - vBelow) / abs(vBelow - vAbove)
-                (coefficient * contourAboveColor + (1.0 - coefficient) * contourBelowColor).toColor()
+                (coefficient * contourAboveColor + (1.0 - coefficient) * contourBelowColor)
+            }
+        }.toColor()
+    }
+
+    inline fun <T> List<T>.binarySearchForBounds(key: Double, selector: (T) -> Double): Int {
+        var pivotIndex = (size - 1) / 2
+
+        var lowerBoundIndex = 0
+        var upperBoundIndex = size
+
+        while (!(selector(this[pivotIndex]) < key && selector(this[pivotIndex + 1]) > key)) {
+            pivotIndex = (lowerBoundIndex + upperBoundIndex) / 2
+
+            val valueAtPivot = selector(this[pivotIndex])
+
+            when {
+                valueAtPivot == key -> return pivotIndex
+                valueAtPivot < key -> lowerBoundIndex = pivotIndex
+                valueAtPivot > key -> upperBoundIndex = pivotIndex
+            }
+
+            if (lowerBoundIndex >= size - 1) {
+                return size - 1
+            }
+
+            if (upperBoundIndex == 0) {
+                return 0
             }
         }
+
+        return pivotIndex
     }
 
     fun Vector3<Double>.toColor(): Color {

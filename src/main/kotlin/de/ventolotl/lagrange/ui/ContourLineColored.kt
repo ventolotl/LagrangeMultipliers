@@ -1,6 +1,7 @@
 package de.ventolotl.lagrange.ui
 
 import de.ventolotl.lagrange.maths.ContourLine
+import de.ventolotl.lagrange.ui.utility.ColorInterpolator.toVec
 import javafx.scene.paint.Color
 
 fun List<ContourLine>.mapToColors(color: Array<Color>): List<ContourLineColored> {
@@ -11,4 +12,6 @@ fun List<ContourLine>.mapToColors(color: Array<Color>): List<ContourLineColored>
     }
 }
 
-data class ContourLineColored(val color: Color, val line: ContourLine)
+data class ContourLineColored(val color: Color, val line: ContourLine) {
+    val colorVec = color.toVec()
+}
