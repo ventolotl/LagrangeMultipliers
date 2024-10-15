@@ -9,12 +9,12 @@ import de.ventolotl.lagrange.ui.utility.write
 import de.ventolotl.lagrange.utility.Vector
 import de.ventolotl.lagrange.utility.Vector2
 import de.ventolotl.lagrange.utility.distSq
+import de.ventolotl.lagrange.utility.length
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import kotlin.math.ceil
 import kotlin.math.max
-
-private const val DIST_TO_CONNECT = 0.5
+import kotlin.math.min
 
 class ContourPane(private val lagrangePane: LagrangePane, private val grid: GridPane) : UIFragment() {
     private val contourFont = Font.font("Arial", 15.0)
@@ -22,12 +22,11 @@ class ContourPane(private val lagrangePane: LagrangePane, private val grid: Grid
     private val function3d = lagrangePane.function3
     private val constraint = lagrangePane.constraint
 
-    private val solutions = function3d.optimize(constraint.rootFunction, constraint.range, 0.05)
-    private val connectedSolutions = FunctionRenderer.computeAlgebraicConnections(solutions, DIST_TO_CONNECT)
-    private val contourConnections = lagrangePane.contourLines.associateWith {
-        FunctionRenderer.computeAlgebraicConnections(it.line.points, DIST_TO_CONNECT)
-    }
-    private val constraintConnections = FunctionRenderer.computeAlgebraicConnections(constraint.points, DIST_TO_CONNECT)
+    private val solutions = function3d.optimize(constraint.rootFunction, constraint.range)
+
+    private val distToConnect = min(constraint.range.rangeX.length, constraint.range.rangeY.length) / 10.0
+    private val connectedSolutions = FunctionRenderer.computeAlgebraicConnections(solutions, distToConnect)
+    private val constraintConnections = FunctionRenderer.computeAlgebraicConnections(constraint.points, distToConnect)
 
     override fun paint() {
         drawContour()
@@ -57,10 +56,6 @@ class ContourPane(private val lagrangePane: LagrangePane, private val grid: Grid
                 ctx.fill = color
                 ctx.fillRect(px.toDouble(), py.toDouble(), step.toDouble(), step.toDouble())
             }
-        }
-
-        contourConnections.forEach { (contour, connections) ->
-            //FunctionRenderer.renderGraph(grid, ctx, connections, Color.BLACK, width * 0.1)
         }
     }
 

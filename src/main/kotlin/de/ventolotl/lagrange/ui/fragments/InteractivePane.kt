@@ -82,7 +82,7 @@ class InteractivePane(lagrangePane: LagrangePane, private val grid: GridPane) : 
     private fun createGradientConstraintFunction(algebraicMousePoint: Vector2<Double>): GradientData? {
         val distFunction = Function3 { x, y -> Vector.of(x, y).distSq(algebraicMousePoint) }
         val closestPoint = distFunction.optimize(
-            constraint.rootFunction, constraint.range, 1.0, 4000
+            constraint.rootFunction, constraint.range, 1
         ).minByOrNull { point ->
             point.distSq(algebraicMousePoint)
         } ?: return null

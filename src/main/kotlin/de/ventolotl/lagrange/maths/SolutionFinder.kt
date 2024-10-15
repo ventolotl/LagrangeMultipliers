@@ -1,14 +1,15 @@
 package de.ventolotl.lagrange.maths
 
 import de.ventolotl.lagrange.utility.*
+import kotlin.math.min
 
 private const val MAX_ITERATIONS = 500000
 
 fun Function3.optimize(
     constraintEq: Function3,
     range: Vector2dRange<Double>,
-    stepSize: Double,
-    maxIterations: Int = MAX_ITERATIONS,
+    accuracy: Int = 1000,
+    maxIterations: Int = MAX_ITERATIONS
 ): List<Vector2<Double>> {
     val functionToOptimizePartialX = this.partialX()
     val functionToOptimizePartialY = this.partialY()
@@ -33,12 +34,15 @@ fun Function3.optimize(
     val equationSolver = EquationSolver(f1, f2, g, maxIterations)
     val coordinates = mutableListOf<Vector2<Double>>()
 
+    val stepSize = min(range.rangeX.length, range.rangeY.length) / accuracy.toDouble()
+    val distinctSolDist = stepSize / 100.0
+
     range.iterate(stepSize) { x, y ->
         equationSolver.findSolution(Vector.of(x, y, 1.0))?.let { solution ->
             val coordinate = Vector.of(solution.x, solution.y)
 
             val unknown = coordinates.none { other ->
-                other.distSq(coordinate) < 0.1
+                other.distSq(coordinate) < distinctSolDist
             }
             val inRange = coordinate in range
 
