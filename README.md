@@ -22,9 +22,9 @@ To find solutions - which means to satisfy all three equations for same $(x,y)$ 
 
 
 ## Preview
-The following plot was created by the program with $f(x,y)=x^2+y^2$ and $g(x,y)=xy \cdot \cos(y) - 4$:
+The following plot was created by the program with $f(x,y)=0.5 (x^2+y^2)$ and $g(x,y)=x \cdot \sin(0.5y) - 4$:
 
-<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/43090398/348569553-a8a2267e-f451-4a2b-901f-739cfa322e68.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240714%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240714T204818Z&X-Amz-Expires=300&X-Amz-Signature=759427c4d888e7fed57c5104f45a37b4e159b16e78c7fef6b9321252b4c5bf5d&X-Amz-SignedHeaders=host&actor_id=43090398&key_id=0&repo_id=736715605" />
+<img src="https://github.com/ventolotl/LagrangeMultipliers/blob/master/res/stage_snapshot.png?raw=true" width=60%/>
 
 ## Some problems
 Note that this program is not perfect. There are certainly many ways to improve parts of the program, especially when it comes to solving the three equations $f_x = \lambda g_x$, $f_y = \lambda g_y$ and $g(x,y)=0$.
