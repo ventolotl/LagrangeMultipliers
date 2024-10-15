@@ -35,7 +35,8 @@ class LagrangeMultipliersUI : Application() {
         val constraint = Constraint(
             equation = constraintEq,
             constant = constraintValue,
-            range = pointsRange
+            range = pointsRange,
+            accuracy = 1000
         )
         val contourLines = functionToOptimize.createContour(
             contourLinesN = 10,

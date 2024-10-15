@@ -60,9 +60,7 @@ object ColorInterpolator {
 
             if (lowerBoundIndex >= size - 1) {
                 return size - 1
-            }
-
-            if (upperBoundIndex == 0) {
+            } else if (upperBoundIndex == 0) {
                 return 0
             }
         }

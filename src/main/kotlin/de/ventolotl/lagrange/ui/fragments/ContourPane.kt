@@ -24,7 +24,7 @@ class ContourPane(private val lagrangePane: LagrangePane, private val grid: Grid
 
     private val solutions = function3d.optimize(constraint.rootFunction, constraint.range)
 
-    private val distToConnect = min(constraint.range.rangeX.length, constraint.range.rangeY.length) / 10.0
+    private val distToConnect = min(constraint.range.rangeX.length, constraint.range.rangeY.length) / 100.0
     private val connectedSolutions = FunctionRenderer.computeAlgebraicConnections(solutions, distToConnect)
     private val constraintConnections = FunctionRenderer.computeAlgebraicConnections(constraint.points, distToConnect)
 

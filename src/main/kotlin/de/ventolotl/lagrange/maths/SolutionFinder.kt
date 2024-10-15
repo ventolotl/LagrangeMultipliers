@@ -3,7 +3,7 @@ package de.ventolotl.lagrange.maths
 import de.ventolotl.lagrange.utility.*
 import kotlin.math.min
 
-private const val MAX_ITERATIONS = 500000
+private const val MAX_ITERATIONS = 10000
 
 fun Function3.optimize(
     constraintEq: Function3,
