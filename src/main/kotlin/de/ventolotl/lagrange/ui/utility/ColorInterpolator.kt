@@ -6,6 +6,8 @@ import de.ventolotl.lagrange.utility.plus
 import de.ventolotl.lagrange.utility.times
 import javafx.scene.paint.Color
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 object ColorInterpolator {
     inline fun <T> linearGradient(
@@ -28,11 +30,12 @@ object ColorInterpolator {
             else -> {
                 val vAbove = value(above)
                 val vBelow = value(below)
+                val vBounds = max(vBelow, min(vAbove, i))
 
                 val contourAboveColor = color(above)
                 val contourBelowColor = color(below)
 
-                val coefficient = abs(i - vBelow) / abs(vBelow - vAbove)
+                val coefficient = abs(vBounds - vBelow) / abs(vBelow - vAbove)
                 (coefficient * contourAboveColor + (1.0 - coefficient) * contourBelowColor)
             }
         }.toColor()
